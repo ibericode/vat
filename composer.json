@@ -1,0 +1,32 @@
+{
+  "name": "dannyvankooten/vat.php",
+  "description": "PHP library for dealing with VAT in Europe",
+  "keywords": ["vat"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Danny van Kooten",
+      "email": "hi@dvk.co"
+    }
+  ],
+  "require": {
+    "php": ">=7.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "DvK\\Vat\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DvK\\Tests\\Vat\\": "tests/"
+    }
+  },
+  "config": {
+    "preferred-install": "dist"
+  },
+  "prefer-stable": true
+}
