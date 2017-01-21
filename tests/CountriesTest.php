@@ -33,4 +33,5 @@ class CountriesTest extends PHPUnit_Framework_TestCase
             self::assertTrue( $countries->inEurope( $country ) );
         }
     }
+    
 }

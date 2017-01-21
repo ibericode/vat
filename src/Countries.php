@@ -349,10 +349,17 @@ class Countries {
      * @return string
      */
     public function ip($ip) {
-        $response = file_get_contents('http://ip2c.org/' . $ip);
+        $url = 'http://ip2c.org/' . $ip;
 
-        if(!empty($response)) {
-            $parts = explode( ';', $response );
+        $curl_handle = curl_init();
+        curl_setopt($curl_handle, CURLOPT_URL, $url);
+        curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, true);
+        $response_body = curl_exec($curl_handle);
+        curl_close($curl_handle);
+
+        if(!empty($response_body)) {
+            $parts = explode( ';', $response_body );
             return $parts[1] === 'ZZ' ? '' : $parts[1];
         }
 
