@@ -20,12 +20,17 @@ class JsonVat implements Client{
     public function fetch() {
         $url = self::URL;
 
-        // fetch data
-        $response = file_get_contents($url);
-        if( empty( $response ) ) {
+        $curl_handle = curl_init();
+        curl_setopt($curl_handle, CURLOPT_URL, $url);
+        curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 0);
+        curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, true);
+        $response_body = curl_exec($curl_handle);
+        curl_close($curl_handle);
+
+        if( empty( $response_body ) ) {
             throw new ClientException( "Error fetching rates from {$url}.");
         }
-        $data = json_decode($response);
+        $data = json_decode($response_body);
 
         // build map with country codes => rates
         $map = array();
