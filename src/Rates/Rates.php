@@ -4,9 +4,9 @@ namespace DvK\Vat\Rates;
 
 use DvK\Vat\Rates\Caches\NullCache;
 use DvK\Vat\Rates\Clients\JsonVat;
-use DvK\Vat\Rates\Interfaces\Cache;
 use DvK\Vat\Rates\Interfaces\Client;
 use DvK\Vat\Rates\Exceptions\Exception;
+use Psr\SimpleCache\CacheInterface;
 
 class Rates
 {
@@ -32,7 +32,7 @@ class Rates
      * @param Client $client     (optional)
      * @param Cache $cache          (optional)
      */
-    public function __construct( Client $client = null, Cache $cache = null )
+    public function __construct( Client $client = null, CacheInterface $cache = null )
     {
         $this->client = $client;
         $this->cache = $cache ? $cache : new NullCache();
@@ -49,7 +49,7 @@ class Rates
             $map = $this->fetch();
 
             // store in cache
-            $this->cache->put('vat-rates', $map, 86400);
+            $this->cache->set('vat-rates', $map, 86400);
         }
 
         return $map;
