@@ -116,7 +116,7 @@ class RatesTest extends PHPUnit_Framework_TestCase
 
         $cacheMock
             ->expects(self::once())
-            ->method('put');
+            ->method('set');
 
         $rates = new Rates( $clientMock, $cacheMock );
     }
