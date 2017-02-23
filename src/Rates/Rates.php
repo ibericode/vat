@@ -80,25 +80,43 @@ class Rates
     /**
      * @param string $country
      * @param string $rate
+     * @param \DateTimeInterface $applicableDate - optionnal - the applicable date
      *
      * @return double
      *
      * @throws Exception
      */
-    public function country($country, $rate = 'standard')
+    public function country($country, $rate = 'standard', \DateTimeInterface $applicableDate = null)
     {
         $country = strtoupper($country);
         $country = $this->getCountryCode($country);
+
+        if (null === $applicableDate) {
+            $applicableDate = new \DateTimeImmutable('today midnight');
+        }
 
         if (!isset($this->map[$country])) {
             throw new Exception('Invalid country code.');
         }
 
-        if (!isset($this->map[$country]->$rate)) {
+        foreach ($this->map[$country]['periods'] AS $period) {
+            if (new \DateTimeImmutable($period['effective_from']) > $applicableDate) {
+                continue;
+            }
+            else {
+                break;
+            }
+        }
+
+        if (empty($period)) {
+            throw new Exception('Unable to find a rate applicable at that date.');
+        }
+
+        if (!isset($period['rates'][$rate])) {
             throw new Exception('Invalid rate.');
         }
 
-        return $this->map[$country]->$rate;
+        return $period['rates'][$rate];
     }
 
     /**

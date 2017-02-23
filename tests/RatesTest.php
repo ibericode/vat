@@ -45,12 +45,40 @@ class RatesTest extends PHPUnit_Framework_TestCase
      * @covers Rates::country
      */
     public function test_country() {
-        $data = array(
-            'NL' => (object) [
-                'standard' => 21,
-                'reduced' => 15
+        $data = [
+            'NL' => [
+                'name'         => 'Netherlands',
+                'code'         => 'NL',
+                'country_code' => 'NL',
+                'periods'      =>
+                    [
+                        [
+                            'effective_from' => '2020-01-01',
+                            'rates'          =>
+                                [
+                                    'reduced'  => 7.0,
+                                    'standard' => 22.0,
+                                ],
+                        ],
+                        [
+                            'effective_from' => '2012-10-01',
+                            'rates'          =>
+                                [
+                                    'reduced'  => 6.0,
+                                    'standard' => 21.0,
+                                ],
+                        ],
+                        [
+                            'effective_from' => '0000-01-01',
+                            'rates'          =>
+                                [
+                                    'reduced'  => 5.0,
+                                    'standard' => 19.0,
+                                ],
+                        ],
+                    ],
             ]
-        );
+        ];
         $mock = $this->getClientMock();
         $mock
             ->method('fetch')
@@ -58,25 +86,61 @@ class RatesTest extends PHPUnit_Framework_TestCase
 
         $rates = new Rates($mock, null);
 
+        // Return correct VAT rates
+        self::assertEquals(  $rates->country('NL'), 21 );
+        self::assertEquals(  $rates->country('NL', 'reduced'), 6 );
+
+        // Return correct VAT rates on an older period
+        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2010-01-01')), 19);
+        self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2010-01-01')), 5);
+
+        // Return correct VAT rates on an future period
+        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2022-01-01')), 22);
+        self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2022-01-01')), 7);
+
         // Exception when supplying country code for which we have no rate
         self::expectException( 'Exception' );
         $rates->country('US');
-
-        // Return correct VAT rates
-        self::assertEquals(  $rates->country('NL'), 21 );
-        self::assertEquals(  $rates->country('NL', 'reduced'), 15 );
     }
 
     /**
      * @covers Rates::all()
      */
     public function test_all() {
-        $data = array(
-            'NL' => (object) [
-                'standard' => 21,
-                'reduced' => 15
+        $data = [
+            'NL' => [
+                'name'         => 'Netherlands',
+                'code'         => 'NL',
+                'country_code' => 'NL',
+                'periods'      =>
+                    [
+                        [
+                            'effective_from' => '2020-01-01',
+                            'rates'          =>
+                                [
+                                    'reduced'  => 7.0,
+                                    'standard' => 22.0,
+                                ],
+                        ],
+                        [
+                            'effective_from' => '2012-10-01',
+                            'rates'          =>
+                                [
+                                    'reduced'  => 6.0,
+                                    'standard' => 21.0,
+                                ],
+                        ],
+                        [
+                            'effective_from' => '0000-01-01',
+                            'rates'          =>
+                                [
+                                    'reduced'  => 5.0,
+                                    'standard' => 19.0,
+                                ],
+                        ],
+                    ],
             ]
-        );
+        ];
         $mock = $this->getClientMock();
         $mock
             ->method('fetch')
@@ -91,7 +155,40 @@ class RatesTest extends PHPUnit_Framework_TestCase
      */
     public function test_ratesAreLoadedFromCache() {
         $mock = $this->getCacheMock();
-        $data = array( 'NL' => (object) [ 'standard' => 21, 'reduced' => 15 ]);
+        $data = [
+            'NL' => [
+                'name'         => 'Netherlands',
+                'code'         => 'NL',
+                'country_code' => 'NL',
+                'periods'      =>
+                    [
+                        [
+                            'effective_from' => '2020-01-01',
+                            'rates'          =>
+                                [
+                                    'reduced'  => 7.0,
+                                    'standard' => 22.0,
+                                ],
+                        ],
+                        [
+                            'effective_from' => '2012-10-01',
+                            'rates'          =>
+                                [
+                                    'reduced'  => 6.0,
+                                    'standard' => 21.0,
+                                ],
+                        ],
+                        [
+                            'effective_from' => '0000-01-01',
+                            'rates'          =>
+                                [
+                                    'reduced'  => 5.0,
+                                    'standard' => 19.0,
+                                ],
+                        ],
+                    ],
+            ]
+        ];
 
         $mock
             ->method('get')
@@ -103,8 +200,17 @@ class RatesTest extends PHPUnit_Framework_TestCase
         self::assertNotEmpty($rates->all());
         self::assertEquals($rates->all(), $data);
 
+        // Return correct VAT rates
         self::assertEquals($rates->country('NL'), 21);
-        self::assertEquals($rates->country('NL', 'reduced'), 15);
+        self::assertEquals($rates->country('NL', 'reduced'), 6);
+
+        // Return correct VAT rates on an older period
+        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2010-01-01')), 19);
+        self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2010-01-01')), 5);
+
+        // Return correct VAT rates on an future period
+        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2022-01-01')), 22);
+        self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2022-01-01')), 7);
     }
 
     /**

@@ -30,14 +30,19 @@ class JsonVat implements Client{
         if( empty( $response_body ) ) {
             throw new ClientException( "Error fetching rates from {$url}.");
         }
-        $data = json_decode($response_body);
+        $data = json_decode($response_body, true);
 
-        // build map with country codes => rates
-        $map = array();
-        foreach ($data->rates as $rate) {
-            $map[$rate->country_code] = $rate->periods[0]->rates;
+        foreach ($data['rates'] AS &$rate) {
+            // Sort by date desc
+            usort($rate['periods'], function ($period1, $period2) {
+                return new \DateTimeImmutable($period1['effective_from']) > new \DateTimeImmutable($period2['effective_from']) ? -1 : 1;
+            });
+
         }
 
-        return $map;
+        $output = array_combine(array_column($data['rates'], 'country_code'), $data['rates']);
+
+
+        return $output;
     }
 }
