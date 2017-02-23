@@ -17,7 +17,7 @@ class Rates
     protected $map = array();
 
     /**
-     * @var Cache
+     * @var CacheInterface
      */
     protected $cache;
 
@@ -30,7 +30,7 @@ class Rates
      * Rates constructor.
      *
      * @param Client $client     (optional)
-     * @param Cache $cache          (optional)
+     * @param CacheInterface $cache          (optional)
      */
     public function __construct( Client $client = null, CacheInterface $cache = null )
     {
