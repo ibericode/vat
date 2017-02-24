@@ -17,7 +17,7 @@ class Rates
     protected $map = array();
 
     /**
-     * @var Cache
+     * @var CacheInterface
      */
     protected $cache;
 
@@ -30,7 +30,7 @@ class Rates
      * Rates constructor.
      *
      * @param Client $client     (optional)
-     * @param Cache $cache          (optional)
+     * @param CacheInterface $cache          (optional)
      */
     public function __construct( Client $client = null, CacheInterface $cache = null )
     {
@@ -80,25 +80,50 @@ class Rates
     /**
      * @param string $country
      * @param string $rate
+     * @param \DateTimeInterface $applicableDate - optionnal - the applicable date
      *
      * @return double
      *
      * @throws Exception
      */
-    public function country($country, $rate = 'standard')
+    public function country($country, $rate = 'standard', \DateTimeInterface $applicableDate = null)
     {
         $country = strtoupper($country);
         $country = $this->getCountryCode($country);
+
+        if (null === $applicableDate) {
+            $applicableDate = new \DateTime('today midnight');
+        }
 
         if (!isset($this->map[$country])) {
             throw new Exception('Invalid country code.');
         }
 
-        if (!isset($this->map[$country]->$rate)) {
+        $periods = $this->map[$country]['periods'];
+
+        // Sort by date desc
+        usort($periods, function ($period1, $period2) {
+            return new \DateTime($period1['effective_from']) > new \DateTime($period2['effective_from']) ? -1 : 1;
+        });
+
+        foreach ($periods AS $period) {
+            if (new \DateTime($period['effective_from']) > $applicableDate) {
+                continue;
+            }
+            else {
+                break;
+            }
+        }
+
+        if (empty($period)) {
+            throw new Exception('Unable to find a rate applicable at that date.');
+        }
+
+        if (!isset($period['rates'][$rate])) {
             throw new Exception('Invalid rate.');
         }
 
-        return $this->map[$country]->$rate;
+        return $period['rates'][$rate];
     }
 
     /**

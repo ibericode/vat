@@ -30,14 +30,9 @@ class JsonVat implements Client{
         if( empty( $response_body ) ) {
             throw new ClientException( "Error fetching rates from {$url}.");
         }
-        $data = json_decode($response_body);
 
-        // build map with country codes => rates
-        $map = array();
-        foreach ($data->rates as $rate) {
-            $map[$rate->country_code] = $rate->periods[0]->rates;
-        }
-
-        return $map;
+        $data = json_decode($response_body, true);
+        $output = array_combine(array_column($data['rates'], 'country_code'), $data['rates']);
+        return $output;
     }
 }

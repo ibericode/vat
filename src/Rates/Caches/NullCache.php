@@ -20,7 +20,7 @@ class NullCache implements CacheInterface
     /**
      * @param string $key
      * @param mixed $value
-     * @param null|int|DateInterval $ttl
+     * @param null|int|\DateInterval $ttl
      *
      * @return bool
      */
@@ -58,7 +58,7 @@ class NullCache implements CacheInterface
 
     /**
      * @param iterable $values
-     * @param null|int|DateInterval $ttl
+     * @param null|int|\DateInterval $ttl
      *
      * @return bool
      */

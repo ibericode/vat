@@ -34,6 +34,7 @@ This library exposes 3 main classes to interact with, `Rates`, `Countries` and `
 $rates = new DvK\Vat\Rates\Rates();
 $rates->country('NL'); // 21
 $rates->country('NL', 'standard'); // 21
+$rates->country('NL', 'standard', new \Datetime('2010-01-01')); // 19
 $rates->country('NL', 'reduced'); // 6
 $rates->all(); // array in country code => rates format
 ```

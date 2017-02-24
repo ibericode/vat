@@ -15,12 +15,29 @@ interface Client {
      * This methods should return an associative array in the following format:
      *
      * [
-     *    'DE' => [
-     *      'standard' => 19,
-     *      'reduced' => 7.0,
-     *    ],
-     *    ...
+     *    'NL' => [
+     *        'name'         => 'Netherlands',
+     *        'code'         => 'NL',
+     *        'country_code' => 'NL',
+     *        'periods'      => [
+     *            [
+     *            'effective_from' => '2012-10-01',
+     *            'rates'          => [
+     *                'reduced'  => 6.0,
+     *                'standard' => 21.0,
+     *                ],
+     *            ],
+     *            [
+     *            'effective_from' => '0000-01-01',
+     *            'rates'          => [
+     *                'reduced'  => 5.0,
+     *                'standard' => 19.0,
+     *                ],
+     *            ],
+     *        ],
+     *    ]
      * ]
+     *
      *
      * @throws ClientException
      *
