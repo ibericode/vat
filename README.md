@@ -45,7 +45,7 @@ $rates->all(); // array in country code => rates format
 $validator = new DvK\Vat\Validator();
 $validator->validate('NL50123'); // false
 $validator->validateFormat('NL203458239B01'); // true (checks format)
-$validator->validateExistence('NL203458239B01') // false (checks existence)
+$validator->validateExistence('NL203458239B01'); // false (checks existence)
 $validator->validate('NL203458239B01'); // false (checks format + existence)
 ```
 
