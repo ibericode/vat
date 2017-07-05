@@ -19,9 +19,11 @@ class Client {
 
     /**
      * Client constructor.
+     * 
+     * @param int $timeout How long should we wait before aborting the request to VIES?
      */
-    public function __construct() {
-        $this->client = new SoapClient( self::URL, [ 'connection_timeout' => 10 ]);
+    public function __construct($timeout = 10) {
+        $this->client = new SoapClient( self::URL, [ 'connection_timeout' => $timeout ]);
     }
 
     /**
