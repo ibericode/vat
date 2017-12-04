@@ -15,7 +15,12 @@ class Client {
     /**
      * @var SoapClient
      */
-    protected $client;
+    private $client;
+
+    /**
+     * @var int
+     */
+    protected $timeout;
 
     /**
      * Client constructor.
@@ -23,7 +28,7 @@ class Client {
      * @param int $timeout How long should we wait before aborting the request to VIES?
      */
     public function __construct($timeout = 10) {
-        $this->client = new SoapClient( self::URL, [ 'connection_timeout' => $timeout ]);
+        $this->timeout = $timeout;
     }
 
     /**
@@ -36,7 +41,7 @@ class Client {
      */
     public function checkVat( $countryCode, $vatNumber ) {
         try {
-            $response = $this->client->checkVat(
+            $response = $this->getClient()->checkVat(
                 array(
                     'countryCode' => $countryCode,
                     'vatNumber' => $vatNumber
@@ -47,5 +52,17 @@ class Client {
         }
 
         return (bool) $response->valid;
+    }
+
+    /**
+     * @return SoapClient
+     */
+    protected function getClient()
+    {
+        if ($this->client === null) {
+            $this->client = new SoapClient(self::URL, ['connection_timeout' => $this->timeout]);
+        }
+
+        return $this->client;
     }
 }
