@@ -2,7 +2,12 @@ vat.php
 ================
 
 <a href="https://travis-ci.org/dannyvankooten/vat.php"><img src="https://img.shields.io/travis/dannyvankooten/vat.php/master.svg?style=flat-square" alt="Build Status"></img></a>
-<a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square" alt="Software License"></img></a>
+
+[![Build Status](https://img.shields.io/travis/dannyvankooten/vat.php.svg))](https://travis-ci.org/dannyvankooten/vat.php)
+[![Latest Stable Version](https://img.shields.io/packagist/v/dannyvankooten/vat.php.svg)](https://packagist.org/packages/dannyvankooten/vat.php)
+![PHP from Packagist](https://img.shields.io/packagist/php-v/dannyvankooten/vat.php.svg)
+![Total Downloads](https://img.shields.io/packagist/dt/dannyvankooten/vat.php.svg)
+![License](https://img.shields.io/github/license/dannyvankooten/vat.php.svg)
 
 vat.php is a simple PHP library which helps you to deal with European VAT rules. It helps you...
 
