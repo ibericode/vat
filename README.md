@@ -1,9 +1,7 @@
 vat.php
 ================
 
-<a href="https://travis-ci.org/dannyvankooten/vat.php"><img src="https://img.shields.io/travis/dannyvankooten/vat.php/master.svg?style=flat-square" alt="Build Status"></img></a>
-
-[![Build Status](https://img.shields.io/travis/dannyvankooten/vat.php.svg))](https://travis-ci.org/dannyvankooten/vat.php)
+[![Build Status](https://img.shields.io/travis/dannyvankooten/vat.php.svg)](https://travis-ci.org/dannyvankooten/vat.php)
 [![Latest Stable Version](https://img.shields.io/packagist/v/dannyvankooten/vat.php.svg)](https://packagist.org/packages/dannyvankooten/vat.php)
 ![PHP from Packagist](https://img.shields.io/packagist/php-v/dannyvankooten/vat.php.svg)
 ![Total Downloads](https://img.shields.io/packagist/dt/dannyvankooten/vat.php.svg)
