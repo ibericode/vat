@@ -99,6 +99,8 @@ class Validator {
      * @param string $vatNumber Either the full VAT number (incl. country) or just the part after the country code.
      *
      * @return boolean
+     *
+     * @throws Vies\ViesException
      */
     public function validate( $vatNumber ) {
        return $this->validateFormat( $vatNumber ) && $this->validateExistence( $vatNumber );
