@@ -3,6 +3,7 @@
 namespace DvK\Tests\Vat;
 
 use DvK\Vat\Rates\Caches\NullCache;
+use DvK\Vat\Rates\Clients\LocalJsonVat;
 use DvK\Vat\Rates\Exceptions\Exception;
 use DvK\Vat\Rates\Rates;
 use DvK\Vat\Rates\Clients\JsonVat;
@@ -227,5 +228,31 @@ class RatesTest extends PHPUnit_Framework_TestCase
         $rates = new Rates( $clientMock, $cacheMock );
     }
 
+    public function test_ratesFromJsonVatCom() {
+        $rates = new Rates(new JsonVat());
 
+        self::assertNotEmpty($rates->all());
+
+        // Return correct VAT rates
+        self::assertEquals($rates->country('NL'), 21);
+        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2010-01-01')), 19);
+        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2022-01-01')), 21);
+
+        self::assertEquals($rates->country('NL', 'reduced'), 6);
+        self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2010-01-01')), 6);
+    }
+
+    public function test_ratesFromLocalFile() {
+        $rates = new Rates(new LocalJsonVat());
+
+        self::assertNotEmpty($rates->all());
+
+        // Return correct VAT rates
+        self::assertEquals($rates->country('NL'), 21);
+        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2010-01-01')), 19);
+        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2022-01-01')), 21);
+
+        self::assertEquals($rates->country('NL', 'reduced'), 6);
+        self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2010-01-01')), 6);
+    }
 }
