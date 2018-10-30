@@ -3,7 +3,9 @@
 namespace DvK\Tests\Vat;
 
 use DvK\Vat\Rates\Caches\NullCache;
+use DvK\Vat\Rates\Clients\Failover;
 use DvK\Vat\Rates\Clients\LocalJsonVat;
+use DvK\Vat\Rates\Exceptions\ClientException;
 use DvK\Vat\Rates\Exceptions\Exception;
 use DvK\Vat\Rates\Rates;
 use DvK\Vat\Rates\Clients\JsonVat;
@@ -254,5 +256,32 @@ class RatesTest extends PHPUnit_Framework_TestCase
 
         self::assertEquals($rates->country('NL', 'reduced'), 6);
         self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2010-01-01')), 6);
+    }
+
+    public function test_ratesFailover() {
+        $primary = $this->getClientMock();
+        $failover = $this->getClientMock();
+
+        $primary->method('fetch')
+            ->willReturn(['vat' => 'primary']);
+        $failover->method('fetch')
+            ->willReturn(['vat' => 'failover']);
+
+        $rates = new Rates(new Failover($primary, $failover));
+        $this->assertEquals(['vat' => 'primary'], $rates->all());
+
+        // Make primary fail and try again
+        $primary->method('fetch')
+            ->willThrowException(new ClientException());
+
+        $rates = new Rates(new Failover($primary, $failover));
+        $this->assertEquals(['vat' => 'failover'], $rates->all());
+
+        // A failing failover should throw the exception
+        $failover->method('fetch')
+            ->willThrowException(new ClientException());
+
+        $this->expectException(ClientException::class);
+        $rates = new Rates(new Failover($primary, $failover));
     }
 }
