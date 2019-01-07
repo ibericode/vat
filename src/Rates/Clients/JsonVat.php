@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace DvK\Vat\Rates\Clients;
 
@@ -8,17 +9,13 @@ use DvK\Vat\Rates\Interfaces\Client;
 class JsonVat implements Client{
 
     /**
-     * @const string
-     */
-    const URL = 'https://jsonvat.com/';
-
-    /**
      * @throws ClientException
      *
      * @return array
      */
-    public function fetch() {
-        $url = self::URL;
+    public function fetch() : array 
+    {
+        $url = 'https://jsonvat.com/';
 
         $curl_handle = curl_init();
         curl_setopt($curl_handle, CURLOPT_URL, $url);

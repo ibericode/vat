@@ -5,7 +5,7 @@ namespace DvK\Tests\Vat;
 use DvK\Vat\Validator;
 use DvK\Vat\Vies;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ValidatorTest
@@ -13,7 +13,7 @@ use PHPUnit_Framework_TestCase;
  *
  * Todo: Tests for validate method
  */
-class ValidatorTest extends PHPUnit_Framework_TestCase
+class ValidatorTest extends TestCase
 {
 
     /**

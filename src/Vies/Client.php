@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace DvK\Vat\Vies;
 
@@ -27,7 +28,8 @@ class Client {
      * 
      * @param int $timeout How long should we wait before aborting the request to VIES?
      */
-    public function __construct($timeout = 10) {
+    public function __construct(int $timeout = 10) 
+    {
         $this->timeout = $timeout;
     }
 
@@ -39,7 +41,8 @@ class Client {
      *
      * @throws ViesException
      */
-    public function checkVat( $countryCode, $vatNumber ) {
+    public function checkVat(string $countryCode, string $vatNumber) : bool 
+    {
         try {
             $response = $this->getClient()->checkVat(
                 array(
@@ -57,7 +60,7 @@ class Client {
     /**
      * @return SoapClient
      */
-    protected function getClient()
+    protected function getClient() : SoapClient
     {
         if ($this->client === null) {
             $this->client = new SoapClient(self::URL, ['connection_timeout' => $this->timeout]);

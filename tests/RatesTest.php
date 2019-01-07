@@ -7,14 +7,14 @@ use DvK\Vat\Rates\Exceptions\Exception;
 use DvK\Vat\Rates\Rates;
 use DvK\Vat\Rates\Clients\JsonVat;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class RatesTest
  *
  * @package DvK\Tests\Vat
  */
-class RatesTest extends PHPUnit_Framework_TestCase
+class RatesTest extends TestCase
 {
     /**
      * Mock JsonVat client so remote API is not hit
@@ -44,7 +44,7 @@ class RatesTest extends PHPUnit_Framework_TestCase
      *
      * @covers Rates::country
      */
-    public function test_country() {
+    public function testCountry() {
         $data = [
             'NL' => [
                 'name'         => 'Netherlands',
@@ -106,7 +106,7 @@ class RatesTest extends PHPUnit_Framework_TestCase
     /**
      * @covers Rates::all()
      */
-    public function test_all() {
+    public function testAll() {
         $data = [
             'NL' => [
                 'name'         => 'Netherlands',
@@ -153,7 +153,7 @@ class RatesTest extends PHPUnit_Framework_TestCase
     /**
      * @covers Rates::load
      */
-    public function test_ratesAreLoadedFromCache() {
+    public function testRatesAreLoadedFromCache() {
         $mock = $this->getCacheMock();
         $data = [
             'NL' => [
@@ -216,7 +216,7 @@ class RatesTest extends PHPUnit_Framework_TestCase
     /**
      *  @covers Rates::load
      */
-    public function test_ratesAreStoredInCache() {
+    public function testRatesAreStoredInCache() {
         $cacheMock = $this->getCacheMock();
         $clientMock = $this->getClientMock();
 

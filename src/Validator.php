@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace DvK\Vat;
 
 /**
@@ -65,7 +67,7 @@ class Validator {
      *
      * @return boolean
      */
-    public function validateFormat( $vatNumber ) {
+    public function validateFormat(string $vatNumber) : bool {
         $vatNumber = strtoupper( $vatNumber );
         $country = substr( $vatNumber, 0, 2 );
         $number = substr( $vatNumber, 2 );
@@ -86,7 +88,7 @@ class Validator {
      *
      * @throws Vies\ViesException
      */
-    public function validateExistence($vatNumber) {
+    public function validateExistence(string $vatNumber) : bool {
         $vatNumber = strtoupper( $vatNumber );
         $country = substr( $vatNumber, 0, 2 );
         $number = substr( $vatNumber, 2 );
@@ -102,8 +104,8 @@ class Validator {
      *
      * @throws Vies\ViesException
      */
-    public function validate( $vatNumber ) {
-       return $this->validateFormat( $vatNumber ) && $this->validateExistence( $vatNumber );
+    public function validate(string $vatNumber) : bool {
+       return $this->validateFormat($vatNumber) && $this->validateExistence($vatNumber);
     }
 
 

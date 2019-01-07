@@ -43,5 +43,5 @@ interface Client {
      *
      * @return array
      */
-    public function fetch();
+    public function fetch() : array;
 }

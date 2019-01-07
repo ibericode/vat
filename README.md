@@ -9,9 +9,10 @@ vat.php
 
 vat.php is a simple PHP library which helps you to deal with European VAT rules. It helps you...
 
-- Grab up-to-date VAT rates for any European member state
-- Validate VAT numbers (by format or existence)
-- Work with ISO 3166-1 alpha-2 country codes and determine whether they're part of the EU.
+- Fetch (historical) VAT rates for any European member state using [jsonvat.com](https://github.com/adamcooke/vat-rates)
+- Validate VAT numbers (by format, [existence](http://ec.europa.eu/taxation_customs/vies/) or both)
+- Validate ISO-3316 alpha-2 country codes
+- Determine whether a country is part of the EU
 - Geolocate IP addresses
 
 The library uses jsonvat.com to obtain its data for the VAT rates. Full details can be seen [here](https://github.com/adamcooke/vat-rates).

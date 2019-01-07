@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace DvK\Vat;
 
@@ -295,7 +296,8 @@ class Countries {
      *
      * @return array
      */
-    public function all() {
+    public function all() : array
+    {
         return self::$all;
     }
 
@@ -304,7 +306,8 @@ class Countries {
      *
      * @return array
      */
-    public function europe() {
+    public function europe() : array 
+    {
         $codes = self::$eu;
         $countries = [];
 
@@ -322,7 +325,8 @@ class Countries {
      *
      * @return string
      */
-    public function name($code) {
+    public function name(string $code) : string 
+    {
         $code = strtoupper($code);
         return self::$all[$code];
     }
@@ -334,7 +338,8 @@ class Countries {
      *
      * @return bool
      */
-    public function inEurope($code) {
+    public function inEurope(string $code) : bool 
+    {
         $code = strtoupper($code);
         return in_array($code, self::$eu);
     }
@@ -344,11 +349,12 @@ class Countries {
      *
      * @link http://about.ip2c.org/
      *
-     * @param string $ip
+     * @param string $ipAddress
      *
      * @return string
      */
-    public function ip($ip) {
+    public function ip(string $ipAddress) : string 
+    {
         $url = 'https://ip2c.org/' . $ip;
 
         $curl_handle = curl_init();
@@ -374,7 +380,8 @@ class Countries {
      * @param string $code
      * @return string
      */
-    public function fixCode($code) {
+    public function fixCode(string $code) : string 
+    {
         static $exceptions = array(
             'GR' => 'EL',
             'UK' => 'GB',

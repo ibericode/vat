@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace DvK\Vat\Rates;
 
@@ -32,10 +33,10 @@ class Rates
      * @param Client $client     (optional)
      * @param CacheInterface $cache          (optional)
      */
-    public function __construct( Client $client = null, CacheInterface $cache = null )
+    public function __construct(Client $client = null, CacheInterface $cache = null)
     {
         $this->client = $client;
-        $this->cache = $cache ? $cache : new NullCache();
+        $this->cache = $cache ?: new NullCache();
         $this->map = $this->load();
     }
 
@@ -49,7 +50,7 @@ class Rates
             $map = $this->fetch();
 
             // store in cache
-            $this->cache->set('vat-rates', $map, 86400);
+            $this->cache->set('vat-rates', $map, 86400);            
         }
 
         return $map;
@@ -60,7 +61,7 @@ class Rates
      *
      * @throws Exception
      */
-    protected function fetch()
+    protected function fetch() : ?array
     {
         if( ! $this->client ) {
             $this->client = new JsonVat();
@@ -72,7 +73,7 @@ class Rates
     /**
      * @return array
      */
-    public function all()
+    public function all() : array
     {
         return $this->map;
     }
@@ -86,7 +87,7 @@ class Rates
      *
      * @throws Exception
      */
-    public function country($country, $rate = 'standard', \DateTimeInterface $applicableDate = null)
+    public function country(string $country, string $rate = 'standard', \DateTimeInterface $applicableDate = null) : float
     {
         $country = strtoupper($country);
         $country = $this->getCountryCode($country);
@@ -134,7 +135,7 @@ class Rates
      * @param string $country
      * @return string
      */
-    protected function getCountryCode($country)
+    protected function getCountryCode(string $country) : string
     {
         if ($country == 'UK') {
             $country = 'GB';
