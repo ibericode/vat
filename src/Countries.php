@@ -349,7 +349,7 @@ class Countries {
      * @return string
      */
     public function ip($ip) {
-        $url = 'http://ip2c.org/' . $ip;
+        $url = 'https://ip2c.org/' . $ip;
 
         $curl_handle = curl_init();
         curl_setopt($curl_handle, CURLOPT_URL, $url);
