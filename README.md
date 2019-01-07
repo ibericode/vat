@@ -20,7 +20,7 @@ For VAT number validation, it uses [VIES VAT number validation](http://ec.europa
 
 ## Installation
 
-[PHP](https://php.net) 5.6+ is required. For VAT number existence checking, the PHP SOAP extension is required as well.
+[PHP](https://php.net) version 7.1 or higher is required. For VAT number existence checking, the PHP SOAP extension is required as well.
 
 To get the latest version of vat.php, simply require the project using [Composer](https://getcomposer.org):
 
@@ -67,4 +67,4 @@ $countries->ip('8.8.8.8'); // US
 
 ## License
 
-vat.php is licensed under [The MIT License (MIT)](LICENSE).
+vat.php is licensed under the [MIT License](LICENSE).
