@@ -33,5 +33,13 @@ class CountriesTest extends TestCase
             self::assertTrue( $countries->inEurope( $country ) );
         }
     }
+
+     /**
+     * @covers Countries::ip
+     */
+    public function testIp() {
+        $countries = new Countries();
+        self::assertEmpty($countries->ip(''));
+    }
     
 }

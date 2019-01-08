@@ -355,7 +355,11 @@ class Countries {
      */
     public function ip(string $ipAddress) : string 
     {
-        $url = 'https://ip2c.org/' . $ip;
+        if (empty($ipAddress)) {
+            return '';
+        }
+
+        $url = sprintf('https://ip2c.org/%s', urlencode($ipAddress));
 
         $curl_handle = curl_init();
         curl_setopt($curl_handle, CURLOPT_URL, $url);
