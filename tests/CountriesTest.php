@@ -51,6 +51,23 @@ class CountriesTest extends TestCase
         }
     }
 
+    /**
+     * @covers Countries::validateCountryCode
+     */
+    public function testValidateCountryCode() {
+        $countries = new Countries();
+        $map = [
+            'foo' => false,
+            '' => false,
+            'NL' => true,
+            'US' => true,
+        ];
+
+        foreach($map as $input => $expected) {
+            self::assertEquals($expected, $countries->validateCountryCode($input));
+        }
+    }
+
      /**
      * @covers Countries::ip
      */

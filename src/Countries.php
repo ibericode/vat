@@ -12,6 +12,9 @@ namespace DvK\Vat;
  */
 class Countries {
 
+    /**
+     * @var array List of ISO-3166-1-alpha2 country-codes + names
+     */
     private static $all = [
         'AF' => 'Afghanistan',
         'AX' => 'Aland Islands',
@@ -292,7 +295,7 @@ class Countries {
     ];
 
     /**
-     * Get all countries in code => name format
+     * Get all countries in ISO-3166-1-alpha2 country code => name format
      *
      * @return array
      */
@@ -344,8 +347,21 @@ class Countries {
         return in_array($code, self::$eu);
     }
 
+
     /**
-     * Checks whether the given string is a valid public IP address
+     * Checks whether the given string is a valid public IPv4 or IPv6 address
+     * 
+     * @param string $countryCode
+     * @return bool
+     */
+    public function validateCountryCode(string $countryCode) : bool
+    {
+        return isset(self::$all[$countryCode]);
+    }
+
+
+    /**
+     * Checks whether the given string is a valid public IPv4 or IPv6 address
      * 
      * @param string $ipAddress
      * @return bool
