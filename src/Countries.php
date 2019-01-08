@@ -332,7 +332,7 @@ class Countries {
     }
 
     /**
-     * Checks whether the given country is in the EU
+     * Checks whether the given string is a country code in the EU
      *
      * @param string $code
      *
@@ -342,6 +342,17 @@ class Countries {
     {
         $code = strtoupper($code);
         return in_array($code, self::$eu);
+    }
+
+    /**
+     * Checks whether the given string is a valid public IP address
+     * 
+     * @param string $ipAddress
+     * @return bool
+     */
+    public function validateIpAddress(string $ipAddress) : bool
+    {
+        return (bool) filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE);
     }
 
     /**
@@ -355,7 +366,7 @@ class Countries {
      */
     public function ip(string $ipAddress) : string 
     {
-        if (empty($ipAddress)) {
+        if (empty($ipAddress) || !$this->validateIpAddress($ipAddress)) {
             return '';
         }
 

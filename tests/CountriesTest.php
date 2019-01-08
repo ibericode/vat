@@ -34,6 +34,23 @@ class CountriesTest extends TestCase
         }
     }
 
+    /**
+     * @covers Countries::validateIpAddress
+     */
+    public function testValidateIpAddress() {
+        $countries = new Countries();
+        $map = [
+            'foo' => false,
+            '192.168.1.10' => false,
+            '8.8.8.8' => true,
+            '54.18.12.111' => true,
+        ];
+
+        foreach($map as $ip => $expected) {
+            self::assertEquals($expected, $countries->validateIpAddress($ip));
+        }
+    }
+
      /**
      * @covers Countries::ip
      */

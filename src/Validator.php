@@ -52,10 +52,11 @@ class Validator {
      *
      * @param Vies\Client $client        (optional)
      */
-    public function __construct( Vies\Client $client = null ) {
+    public function __construct(Vies\Client $client = null) 
+    {
         $this->client = $client;
 
-        if( ! $this->client ) {
+        if (! $this->client) {
             $this->client = new Vies\Client();
         }
     }
@@ -67,16 +68,17 @@ class Validator {
      *
      * @return boolean
      */
-    public function validateFormat(string $vatNumber) : bool {
-        $vatNumber = strtoupper( $vatNumber );
-        $country = substr( $vatNumber, 0, 2 );
-        $number = substr( $vatNumber, 2 );
+    public function validateFormat(string $vatNumber) : bool 
+    {
+        $vatNumber = strtoupper($vatNumber);
+        $country = substr($vatNumber, 0, 2);
+        $number = substr($vatNumber, 2);
 
-        if( ! isset( self::$patterns[$country]) ) {
+        if( ! isset(self::$patterns[$country]) ) {
             return false;
         }
 
-        $matches = preg_match( '/^' . self::$patterns[$country] . '$/', $number ) > 0;
+        $matches = preg_match('/^' . self::$patterns[$country] . '$/', $number) > 0;
         return $matches;
     }
 
@@ -88,10 +90,11 @@ class Validator {
      *
      * @throws Vies\ViesException
      */
-    public function validateExistence(string $vatNumber) : bool {
-        $vatNumber = strtoupper( $vatNumber );
-        $country = substr( $vatNumber, 0, 2 );
-        $number = substr( $vatNumber, 2 );
+    public function validateExistence(string $vatNumber) : bool 
+    {
+        $vatNumber = strtoupper( $vatNumber);
+        $country = substr($vatNumber, 0, 2);
+        $number = substr($vatNumber, 2);
         return $this->client->checkVat($country, $number);
     }
 
@@ -104,7 +107,8 @@ class Validator {
      *
      * @throws Vies\ViesException
      */
-    public function validate(string $vatNumber) : bool {
+    public function validate(string $vatNumber) : bool 
+    {
        return $this->validateFormat($vatNumber) && $this->validateExistence($vatNumber);
     }
 
