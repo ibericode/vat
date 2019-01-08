@@ -368,6 +368,10 @@ class Countries {
      */
     public function validateIpAddress(string $ipAddress) : bool
     {
+        if (empty($ipAddress)) {
+            return false;
+        }
+
         return (bool) filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE);
     }
 
@@ -382,7 +386,7 @@ class Countries {
      */
     public function ip(string $ipAddress) : string 
     {
-        if (empty($ipAddress) || !$this->validateIpAddress($ipAddress)) {
+        if (!$this->validateIpAddress($ipAddress)) {
             return '';
         }
 
