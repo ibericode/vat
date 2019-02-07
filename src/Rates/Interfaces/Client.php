@@ -12,7 +12,7 @@ use DvK\Vat\Rates\Exceptions\ClientException;
 interface Client {
 
     /**
-     * This methods should return an associative array in the following format:
+     * This method should return an associative array in the following format:
      *
      * [
      *    'NL' => [

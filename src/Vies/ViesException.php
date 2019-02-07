@@ -1,6 +1,6 @@
 <?php
 
-namespace DvK\Vat\Vies;
+namespace Ibericode\Vat\Vies;
 
 use Exception;
 

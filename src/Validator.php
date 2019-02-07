@@ -1,7 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace DvK\Vat;
+namespace Ibericode\Vat;
+
+use PHPUnit\Framework\Constraint\Count;
 
 /**
  * Class Validator
@@ -48,17 +50,47 @@ class Validator {
     );
 
     /**
+     * @var Vies\Client
+     */
+    private $client;
+
+    private $countries;
+
+    /**
      * VatValidator constructor.
      *
      * @param Vies\Client $client        (optional)
      */
     public function __construct(Vies\Client $client = null) 
     {
-        $this->client = $client;
+        $this->client = $client ?: new Vies\Client();
+    }
 
-        if (! $this->client) {
-            $this->client = new Vies\Client();
+    /**
+     * Checks whether the given string is a valid public IPv4 or IPv6 address
+     *
+     * @param string $countryCode
+     * @return bool
+     */
+    public function validateCountryCode(string $countryCode) : bool
+    {
+        $countries = new Countries();
+        return $countries->has($countryCode);
+    }
+
+    /**
+     * Checks whether the given string is a valid public IPv4 or IPv6 address
+     *
+     * @param string $ipAddress
+     * @return bool
+     */
+    public function validateIpAddress(string $ipAddress) : bool
+    {
+        if ($ipAddress === '') {
+            return false;
         }
+
+        return (bool) filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE);
     }
 
     /**
@@ -68,13 +100,17 @@ class Validator {
      *
      * @return boolean
      */
-    public function validateFormat(string $vatNumber) : bool 
+    public function validateVatNumberFormat(string $vatNumber) : bool
     {
+        if ($vatNumber === '') {
+            return false;
+        }
+
         $vatNumber = strtoupper($vatNumber);
         $country = substr($vatNumber, 0, 2);
         $number = substr($vatNumber, 2);
 
-        if( ! isset(self::$patterns[$country]) ) {
+        if (! isset(self::$patterns[$country]) ) {
             return false;
         }
 
@@ -90,7 +126,7 @@ class Validator {
      *
      * @throws Vies\ViesException
      */
-    public function validateExistence(string $vatNumber) : bool 
+    protected function validateVatNumberExistence(string $vatNumber) : bool
     {
         $vatNumber = strtoupper( $vatNumber);
         $country = substr($vatNumber, 0, 2);
@@ -107,9 +143,9 @@ class Validator {
      *
      * @throws Vies\ViesException
      */
-    public function validate(string $vatNumber) : bool 
+    public function validateVatNumber(string $vatNumber) : bool
     {
-       return $this->validateFormat($vatNumber) && $this->validateExistence($vatNumber);
+       return $this->validateVatNumberFormat($vatNumber) && $this->validateVatNumberExistence($vatNumber);
     }
 
 

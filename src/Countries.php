@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace DvK\Vat;
+namespace Ibericode\Vat;
 
 /**
  * Class Countries
  *
- * This class contains a few helpers methods for dealing with ISO-3166-1-alpha2 countries (and EC exceptions)
+ * This class contains a few helpers methods for dealing with ISO-3166-1-alpha2 countries
  *
- * @package DvK\Vat
+ * @package Ibericode\Vat
  */
 class Countries {
 
@@ -263,36 +263,21 @@ class Countries {
         'ZW' => 'Zimbabwe',
     ];
 
-    private static $eu = [
-        'AT',
-        'BE',
-        'BG',
-        'CY',
-        'CZ',
-        'DE',
-        'DK',
-        'EE',
-        'ES',
-        'FI',
-        'FR',
-        'GB',
-        'GR',
-        'HU',
-        'HR',
-        'IE',
-        'IT',
-        'LT',
-        'LU',
-        'LV',
-        'MT',
-        'NL',
-        'PL',
-        'PT',
-        'RO',
-        'SE',
-        'SI',
-        'SK'
-    ];
+    public function get(string $countryCode, array $rates = []) : Country
+    {
+        if (!$this->has($countryCode))
+        {
+            throw new \Exception('Invalid country code');
+        }
+
+        $name = self::$all[$countryCode];
+        return new Country($countryCode, $name, $rates);
+    }
+
+    public function has(string $countryCode) : bool
+    {
+        return isset(self::$all[$countryCode]);
+    }
 
     /**
      * Get all countries in ISO-3166-1-alpha2 country code => name format
@@ -304,76 +289,7 @@ class Countries {
         return self::$all;
     }
 
-    /**
-     * Get all EU countries in code => name format
-     *
-     * @return array
-     */
-    public function europe() : array 
-    {
-        $codes = self::$eu;
-        $countries = [];
 
-        foreach($codes as $code){
-            $countries[$code] = self::$all[$code];
-        }
-
-        return $countries;
-    }
-
-    /**
-     * Get full country name for a given country code
-     *
-     * @param string $code
-     *
-     * @return string
-     */
-    public function name(string $code) : string 
-    {
-        $code = strtoupper($code);
-        return self::$all[$code];
-    }
-
-    /**
-     * Checks whether the given string is a country code in the EU
-     *
-     * @param string $code
-     *
-     * @return bool
-     */
-    public function inEurope(string $code) : bool 
-    {
-        $code = strtoupper($code);
-        return in_array($code, self::$eu);
-    }
-
-
-    /**
-     * Checks whether the given string is a valid public IPv4 or IPv6 address
-     * 
-     * @param string $countryCode
-     * @return bool
-     */
-    public function validateCountryCode(string $countryCode) : bool
-    {
-        return isset(self::$all[$countryCode]);
-    }
-
-
-    /**
-     * Checks whether the given string is a valid public IPv4 or IPv6 address
-     * 
-     * @param string $ipAddress
-     * @return bool
-     */
-    public function validateIpAddress(string $ipAddress) : bool
-    {
-        if (empty($ipAddress)) {
-            return false;
-        }
-
-        return (bool) filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE);
-    }
 
     /**
      * Gets the country code by IP address
@@ -407,26 +323,6 @@ class Countries {
         return '';
     }
 
-    /**
-     * Get country codes which are used by European Commissions (exceptions to ISO-3166-1-alpha2)
-     *
-     * @link
-     *
-     * @param string $code
-     * @return string
-     */
-    public function fixCode(string $code) : string 
-    {
-        static $exceptions = array(
-            'GR' => 'EL',
-            'UK' => 'GB',
-        );
 
-        if( isset( $exceptions[$code] ) ) {
-            return $exceptions[$code];
-        }
-
-        return $code;
-    }
 
 }

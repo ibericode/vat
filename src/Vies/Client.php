@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DvK\Vat\Vies;
+namespace Ibericode\Vat\Vies;
 
 use SoapClient;
 use SoapFault;

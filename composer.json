@@ -11,6 +11,8 @@
   ],
   "require": {
     "php": ">=7.1",
+    "ext-curl": "*",
+    "ext-json": "*",
     "ext-soap": "*",
     "psr/simple-cache": "^1.0"
   },
@@ -22,12 +24,12 @@
   },
   "autoload": {
     "psr-4": {
-      "DvK\\Vat\\": "src/"
+      "Ibericode\\Vat\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "DvK\\Tests\\Vat\\": "tests/"
+      "Ibericode\\Vat\\Tests\\": "tests/"
     }
   },
   "config": {
