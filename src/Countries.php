@@ -12,6 +12,9 @@ namespace DvK\Vat;
  */
 class Countries {
 
+    /**
+     * @var array List of ISO-3166-1-alpha2 country-codes + names
+     */
     private static $all = [
         'AF' => 'Afghanistan',
         'AX' => 'Aland Islands',
@@ -292,7 +295,7 @@ class Countries {
     ];
 
     /**
-     * Get all countries in code => name format
+     * Get all countries in ISO-3166-1-alpha2 country code => name format
      *
      * @return array
      */
@@ -332,7 +335,7 @@ class Countries {
     }
 
     /**
-     * Checks whether the given country is in the EU
+     * Checks whether the given string is a country code in the EU
      *
      * @param string $code
      *
@@ -342,6 +345,34 @@ class Countries {
     {
         $code = strtoupper($code);
         return in_array($code, self::$eu);
+    }
+
+
+    /**
+     * Checks whether the given string is a valid public IPv4 or IPv6 address
+     * 
+     * @param string $countryCode
+     * @return bool
+     */
+    public function validateCountryCode(string $countryCode) : bool
+    {
+        return isset(self::$all[$countryCode]);
+    }
+
+
+    /**
+     * Checks whether the given string is a valid public IPv4 or IPv6 address
+     * 
+     * @param string $ipAddress
+     * @return bool
+     */
+    public function validateIpAddress(string $ipAddress) : bool
+    {
+        if (empty($ipAddress)) {
+            return false;
+        }
+
+        return (bool) filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE);
     }
 
     /**
@@ -355,7 +386,11 @@ class Countries {
      */
     public function ip(string $ipAddress) : string 
     {
-        $url = 'https://ip2c.org/' . $ip;
+        if (!$this->validateIpAddress($ipAddress)) {
+            return '';
+        }
+
+        $url = sprintf('https://ip2c.org/%s', urlencode($ipAddress));
 
         $curl_handle = curl_init();
         curl_setopt($curl_handle, CURLOPT_URL, $url);

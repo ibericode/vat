@@ -33,5 +33,47 @@ class CountriesTest extends TestCase
             self::assertTrue( $countries->inEurope( $country ) );
         }
     }
+
+    /**
+     * @covers Countries::validateIpAddress
+     */
+    public function testValidateIpAddress() {
+        $countries = new Countries();
+        $map = [
+            'foo' => false,
+            '192.168.1.10' => false,
+            '8.8.8.8' => true,
+            '54.18.12.111' => true,
+        ];
+
+        foreach($map as $ip => $expected) {
+            self::assertEquals($expected, $countries->validateIpAddress($ip));
+        }
+    }
+
+    /**
+     * @covers Countries::validateCountryCode
+     */
+    public function testValidateCountryCode() {
+        $countries = new Countries();
+        $map = [
+            'foo' => false,
+            '' => false,
+            'NL' => true,
+            'US' => true,
+        ];
+
+        foreach($map as $input => $expected) {
+            self::assertEquals($expected, $countries->validateCountryCode($input));
+        }
+    }
+
+     /**
+     * @covers Countries::ip
+     */
+    public function testIp() {
+        $countries = new Countries();
+        self::assertEmpty($countries->ip(''));
+    }
     
 }
