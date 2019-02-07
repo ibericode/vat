@@ -1,11 +1,11 @@
 vat
 ================
 
-[![Build Status](https://img.shields.io/travis/dannyvankooten/vat.php.svg)](https://travis-ci.org/dannyvankooten/vat.php)
+[![Build Status](https://img.shields.io/travis/ibericode/vat.svg)](https://travis-ci.org/ibericode/vat)
 [![Latest Stable Version](https://img.shields.io/packagist/v/dannyvankooten/vat.php.svg)](https://packagist.org/packages/dannyvankooten/vat.php)
 ![PHP from Packagist](https://img.shields.io/packagist/php-v/dannyvankooten/vat.php.svg)
 ![Total Downloads](https://img.shields.io/packagist/dt/dannyvankooten/vat.php.svg)
-![License](https://img.shields.io/github/license/dannyvankooten/vat.php.svg)
+![License](https://img.shields.io/github/license/ibericode/vat.svg)
 
 This is a simple PHP library to help you deal with Europe's VAT rules. 
 
