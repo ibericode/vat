@@ -1,14 +1,9 @@
 <?php
 
-namespace DvK\Vat\Rates\Interfaces;
+namespace Ibericode\Vat\Interfaces;
 
-use DvK\Vat\Rates\Exceptions\ClientException;
+use Ibericode\Vat\Exceptions\ClientException;
 
-/**
- * Interface Client
- *
- * @package DvK\Vat\Rates\Interfaces
- */
 interface Client {
 
     /**

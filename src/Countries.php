@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Ibericode\Vat;
 
+use Ibericode\Vat\Exceptions\Exception;
+
 /**
  * Class Countries
  *
@@ -263,17 +265,27 @@ class Countries {
         'ZW' => 'Zimbabwe',
     ];
 
+    /**
+     * @param string $countryCode
+     * @param array $rates
+     * @return Country
+     * @throws Exception
+     */
     public function get(string $countryCode, array $rates = []) : Country
     {
         if (!$this->has($countryCode))
         {
-            throw new \Exception('Invalid country code');
+            throw new Exception("Invalid country code: {$countryCode}");
         }
 
         $name = self::$all[$countryCode];
         return new Country($countryCode, $name, $rates);
     }
 
+    /**
+     * @param string $countryCode
+     * @return bool
+     */
     public function has(string $countryCode) : bool
     {
         return isset(self::$all[$countryCode]);
@@ -288,41 +300,6 @@ class Countries {
     {
         return self::$all;
     }
-
-
-
-    /**
-     * Gets the country code by IP address
-     *
-     * @link http://about.ip2c.org/
-     *
-     * @param string $ipAddress
-     *
-     * @return string
-     */
-    public function ip(string $ipAddress) : string 
-    {
-        if (!$this->validateIpAddress($ipAddress)) {
-            return '';
-        }
-
-        $url = sprintf('https://ip2c.org/%s', urlencode($ipAddress));
-
-        $curl_handle = curl_init();
-        curl_setopt($curl_handle, CURLOPT_URL, $url);
-        curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 10);
-        curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, true);
-        $response_body = curl_exec($curl_handle);
-        curl_close($curl_handle);
-
-        if(!empty($response_body)) {
-            $parts = explode( ';', $response_body );
-            return $parts[1] === 'ZZ' ? '' : $parts[1];
-        }
-
-        return '';
-    }
-
 
 
 }

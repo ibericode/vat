@@ -3,6 +3,7 @@
 namespace Ibericode\Vat\Tests;
 
 use Ibericode\Vat\Country;
+use Ibericode\Vat\Period;
 use PHPUnit\Framework\TestCase;
 
 class CountryTest extends TestCase
@@ -22,12 +23,9 @@ class CountryTest extends TestCase
     public function testGetRate()
     {
         $country = new Country('NL', 'Netherlands', [
-            [
-                'effective_from' => new \DateTime('2015/01/01'),
-                'rates' => [
-                    'standard' => 21.00,
-                ]
-            ]
+            new Period(new \DateTime('2015/01/01'), [
+                'standard' => 21.00,
+            ])
         ]);
 
         $rate = $country->getRate();
@@ -37,28 +35,19 @@ class CountryTest extends TestCase
     public function testGetRateOn()
     {
         $country = new Country('NL', 'Netherlands', [
-            [
-                'effective_from' => new \DateTime('2015/01/01'),
-                'rates' => [
-                    'standard' => 21.00,
-                ]
-            ],
-            [
-                'effective_from' => new \DateTime('2016/01/01'),
-                'rates' => [
-                    'standard' => 22.00,
-                ]
-            ],
-            [
-                'effective_from' => new \DateTime('2017/01/01'),
-                'rates' => [
-                    'standard' => 23.00,
-                ]
-            ]
+            new Period(new \DateTime('2015/01/01'), [
+                'standard' => 20.00,
+            ]),
+            new Period(new \DateTime('2016/01/01'), [
+                'standard' => 21.00,
+            ]),
+            new Period(new \DateTime('2017/01/01'), [
+                'standard' => 22.00,
+            ]),
         ]);
 
         $rate = $country->getRateOn(new \DateTime('2016/02/01'));
-        $this->assertEquals(22.00, $rate);
+        $this->assertEquals(21.00, $rate);
     }
 
     public function testIsEU()

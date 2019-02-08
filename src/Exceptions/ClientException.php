@@ -1,5 +1,5 @@
 <?php
 
-namespace DvK\Vat\Rates\Exceptions;
+namespace Ibericode\Vat\Exceptions;
 
 class ClientException extends Exception {}

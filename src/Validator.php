@@ -3,14 +3,8 @@ declare(strict_types=1);
 
 namespace Ibericode\Vat;
 
-use PHPUnit\Framework\Constraint\Count;
-
-/**
- * Class Validator
- *
- * @package DvK\Vat
- */
-class Validator {
+class Validator
+{
 
     /**
      * Regular expression patterns per country code
@@ -53,8 +47,6 @@ class Validator {
      * @var Vies\Client
      */
     private $client;
-
-    private $countries;
 
     /**
      * VatValidator constructor.

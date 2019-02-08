@@ -3,6 +3,7 @@
 namespace Ibericode\Vat\Tests;
 
 use Ibericode\Vat\Countries;
+use Ibericode\Vat\Exceptions\Exception;
 use PHPUnit\Framework\TestCase;
 
 class CountriesTest extends TestCase

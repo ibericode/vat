@@ -1,10 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace Ibericode\Vat;
 
-use DateTime;
+use DateTimeImmutable;
 use DateTimeInterface;
-use Exception;
+use Ibericode\Vat\Exceptions\Exception;
 
 class Country
 {
@@ -19,20 +20,11 @@ class Country
     {
         $this->name = $name;
         $this->code = $code;
-
-        // Ensure we have a DateTime for each period
-        $this->periods = array_map(function($period) {
-            if ($period['effective_from'] instanceof DateTimeInterface) {
-                return $period;
-            }
-
-            $period['effective_from'] = new DateTime($period['effective_from']);
-            return $period;
-        }, $periods);
+        $this->periods = $periods;
 
         // Sort periods by DateTime (DESC)
-        usort($this->periods, function ($period1, $period2) {
-            return $period1 > $period2 ? -1 : 1;
+        usort($this->periods, function (Period $period1, Period $period2) {
+            return $period1->getEffectiveFrom() > $period2->getEffectiveFrom() ? -1 : 1;
         });
     }
 
@@ -46,33 +38,28 @@ class Country
         return $this->code;
     }
 
-    private function resolveRatesOn(DateTimeInterface $datetime) : array
+    private function resolvePeriod(DateTimeInterface $datetime) : Period
     {
-        // find first period larger than given datetime
+        // find first active period (because periods are sorted)
         foreach ($this->periods AS $period) {
-            if ($datetime > $period['effective_from']) {
-                return $period['rates'];
+            if ($datetime >= $period->getEffectiveFrom()) {
+                return $period;
             }
         }
 
-        throw new \Exception('Unable to find a rate applicable at that date.');
+        throw new Exception("Unable to find a rate for date {$datetime->format(DATE_ATOM)}.");
     }
 
     public function getRate(string $level = self::RATE_STANDARD) : float
     {
-        $todayMidnight = new \DateTime('today midnight');
+        $todayMidnight = new \DateTimeImmutable('today midnight');
         return $this->getRateOn($todayMidnight, $level);
     }
 
     public function getRateOn(\DateTimeInterface $datetime, string $level = self::RATE_STANDARD) : float
     {
-        $rates = $this->resolveRatesOn($datetime);
-
-        if (!isset($rates[$level])) {
-            throw new \Exception('Invalid rate.');
-        }
-
-        return $rates[$level];
+        $activePeriod = $this->resolvePeriod($datetime);
+        return $activePeriod->getRate($level);
     }
 
     public function isEU() : bool

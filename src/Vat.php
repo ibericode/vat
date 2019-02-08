@@ -1,19 +1,25 @@
 <?php
+declare(strict_types=1);
 
 namespace Ibericode\Vat;
 
-use DvK\Vat\Rates\Clients\JsonVat;
+use Ibericode\Vat\Clients\JsonVat;
+use Ibericode\Vat\Interfaces\Client;
 use Psr\SimpleCache\CacheInterface;
 
 class Vat {
     private $cache;
-    private $rates;
-    private $countries;
+    private $client;
+    private $rates = [];
+    private $options;
 
-    public function __construct(CacheInterface $cache = null)
+    public function __construct(CacheInterface $cache = null, Client $client = null, array $options = [])
     {
         $this->cache = $cache;
-        $this->countries = new Countries();
+        $this->client = $client;
+        $this->options = array_merge([
+            'ttl' => 7200, // 2 hours
+        ], $options);
     }
 
     private function fetchRates()
@@ -27,18 +33,20 @@ class Vat {
             return;
         }
 
-        $client = new JsonVat();
-        $this->rates = $client->fetch();
+        $this->client = $this->client ?: new JsonVat();
+        $this->rates = $this->client->fetch();
 
         if ($this->cache instanceof CacheInterface) {
-            $this->cache->set('ibericode-vat-rates', $this->rates);
+            $this->cache->set('ibericode-vat-rates', $this->rates, $this->options['ttl']);
         }
     }
 
     public function getCountry(string $countryCode) : Country
     {
         $this->fetchRates();
-        return $this->countries->get($countryCode, $this->rates[$countryCode] ?: []);
+        $countries = new Countries();
+        $rates = isset($this->rates[$countryCode]) ? $this->rates[$countryCode] : [];
+        return $countries->get($countryCode, $rates);
     }
 
 }
