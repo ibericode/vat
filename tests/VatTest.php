@@ -2,20 +2,29 @@
 
 namespace Ibericode\Vat\Tests;
 
+use Ibericode\Vat\Cache\NullCache;
 use Ibericode\Vat\Clients\JsonVat;
+use Ibericode\Vat\Exceptions\Exception;
 use Ibericode\Vat\Period;
 use Ibericode\Vat\Vat;
 use PHPUnit\Framework\TestCase;
+use Psr\SimpleCache\CacheInterface;
 
 class VatTest extends TestCase
 {
-    public function testGetCountry()
+    private function getJsonVatMock()
     {
         $client = $this->getMockBuilder(JsonVat::class)->getMock();
         $client
             ->method('fetch')
             ->willReturn($this->getSampleJsonVatData());
 
+        return $client;
+    }
+
+    public function testGetCountry()
+    {
+        $client = $this->getJsonVatMock();
         $vat = new Vat(null, $client);
         $country = $vat->getCountry('NL');
 
@@ -25,7 +34,34 @@ class VatTest extends TestCase
         $this->assertEquals(22.0, $country->getRateOn(new \DateTime('2016/01/01')));
     }
 
-    public function getSampleJsonVatData()
+    public function testGetCountryWithInvalidCountryCode()
+    {
+        $client = $this->getJsonVatMock();
+        $vat = new Vat(null, $client);
+        $this->expectException(Exception::class);
+        $vat->getCountry('FOO');
+    }
+
+    public function testRatesAreCached()
+    {
+        $cache = $this->getMockBuilder(NullCache::class)->getMock();
+        $cache
+            ->method('has')
+            ->willReturn(true);
+        $cache
+            ->method('get')
+            ->willReturn($this->getSampleJsonVatData());
+
+        $client = $this->getJsonVatMock();
+        $client->method('fetch')->willThrowException(new \Exception('fetch() called while trying to get from cache'));
+        $vat = new Vat($cache, $client);
+
+        $country = $vat->getCountry('NL');
+        $this->assertEquals(23.0, $country->getRate());
+    }
+
+
+    private function getSampleJsonVatData()
     {
         return [
            'NL' => [

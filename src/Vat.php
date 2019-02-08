@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Ibericode\Vat;
 
+use Ibericode\Vat\Cache\NullCache;
 use Ibericode\Vat\Clients\JsonVat;
 use Ibericode\Vat\Interfaces\Client;
 use Psr\SimpleCache\CacheInterface;
@@ -28,17 +29,15 @@ class Vat {
             return;
         }
 
-        if ($this->cache instanceof CacheInterface && $this->cache->has('ibericode-vat-rates')) {
+        $this->cache = $this->cache ?: new NullCache();
+        if ($this->cache->has('ibericode-vat-rates')) {
             $this->rates = $this->cache->get('ibericode-vat-rates');
             return;
         }
 
         $this->client = $this->client ?: new JsonVat();
         $this->rates = $this->client->fetch();
-
-        if ($this->cache instanceof CacheInterface) {
-            $this->cache->set('ibericode-vat-rates', $this->rates, $this->options['ttl']);
-        }
+        $this->cache->set('ibericode-vat-rates', $this->rates, $this->options['ttl']);
     }
 
     public function getCountry(string $countryCode) : Country
