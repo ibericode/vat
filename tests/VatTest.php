@@ -6,7 +6,7 @@ use Ibericode\Vat\Cache\NullCache;
 use Ibericode\Vat\Clients\JsonVat;
 use Ibericode\Vat\Exceptions\Exception;
 use Ibericode\Vat\Period;
-use Ibericode\Vat\Vat;
+use Ibericode\Vat\Rates;
 use PHPUnit\Framework\TestCase;
 use Psr\SimpleCache\CacheInterface;
 
@@ -22,24 +22,20 @@ class VatTest extends TestCase
         return $client;
     }
 
-    public function testGetCountry()
+    public function testGetRateForCountry()
     {
         $client = $this->getJsonVatMock();
-        $vat = new Vat(null, $client);
-        $country = $vat->getCountry('NL');
-
-        $this->assertEquals('NL', $country->getCode());
-        $this->assertEquals('Netherlands', $country->getName());
-        $this->assertEquals(23.0, $country->getRate());
-        $this->assertEquals(22.0, $country->getRateOn(new \DateTime('2016/01/01')));
+        $vat = new Rates(null, $client);
+        $rate = $vat->getRateForCountry('NL');
+        $this->assertEquals(23.0, $rate);
     }
 
-    public function testGetCountryWithInvalidCountryCode()
+    public function testGetRateForCountryWithInvalidCountryCode()
     {
         $client = $this->getJsonVatMock();
-        $vat = new Vat(null, $client);
+        $vat = new Rates(null, $client);
         $this->expectException(Exception::class);
-        $vat->getCountry('FOO');
+        $vat->getRateForCountry('FOO');
     }
 
     public function testRatesAreCached()
@@ -50,14 +46,20 @@ class VatTest extends TestCase
             ->willReturn(true);
         $cache
             ->method('get')
-            ->willReturn($this->getSampleJsonVatData());
+            ->willReturn([
+                'NL' => [
+                    new Period(new \DateTime('2015/01/01'), [
+                        'standard' => 25.00,
+                    ])
+                ]
+            ]);
 
         $client = $this->getJsonVatMock();
         $client->method('fetch')->willThrowException(new \Exception('fetch() called while trying to get from cache'));
-        $vat = new Vat($cache, $client);
+        $vat = new Rates($cache, $client);
 
-        $country = $vat->getCountry('NL');
-        $this->assertEquals(23.0, $country->getRate());
+        $rate = $vat->getRateForCountry('NL');
+        $this->assertEquals(25.0, $rate);
     }
 
 

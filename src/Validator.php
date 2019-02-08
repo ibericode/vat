@@ -67,7 +67,7 @@ class Validator
     public function validateCountryCode(string $countryCode) : bool
     {
         $countries = new Countries();
-        return $countries->has($countryCode);
+        return isset($countries[$countryCode]);
     }
 
     /**

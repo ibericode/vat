@@ -7,10 +7,13 @@ namespace Ibericode\Vat;
 use InvalidArgumentException;
 use DateTimeInterface;
 
+/**
+ * Class Period
+ *
+ * @package Ibericode\Vat
+ * @internal
+ */
 class Period {
-    const RATE_STANDARD = 'standard';
-    const RATE_REDUCED = 'reduced';
-
     private $effectiveFrom;
     private $rates = [];
 
@@ -25,7 +28,7 @@ class Period {
         return $this->effectiveFrom;
     }
 
-    public function getRate(string $level = self::RATE_STANDARD) : float
+    public function getRate(string $level) : float
     {
         if (!isset($this->rates[$level])) {
             throw new InvalidArgumentException("Invalid rate level: {$level}");
