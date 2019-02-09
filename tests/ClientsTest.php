@@ -2,9 +2,9 @@
 
 namespace Ibericode\Vat\Tests\Clients;
 
-use Ibericode\Vat\Clients\IbericodeVatRates;
-use Ibericode\Vat\Clients\JsonVat;
-use Ibericode\Vat\Interfaces\Client;
+use Ibericode\Vat\Clients\IbericodeVatRatesClient;
+use Ibericode\Vat\Clients\JsonVatClient;
+use Ibericode\Vat\Clients\Client;
 use Ibericode\Vat\Period;
 use PHPUnit\Framework\TestCase;
 
@@ -25,7 +25,7 @@ class ClientsTest extends TestCase {
 
     public function clientProvider()
     {
-        yield [new JsonVat()];
-        yield [new IbericodeVatRates()];
+        yield [new JsonVatClient()];
+        yield [new IbericodeVatRatesClient()];
     }
 }

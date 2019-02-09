@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace Ibericode\Vat\Clients;
 
-use Ibericode\Vat\Exceptions\ClientException;
-use Ibericode\Vat\Interfaces\Client;
 use Ibericode\Vat\Period;
 
-class JsonVat implements Client{
+class JsonVatClient implements Client
+{
 
     /**
      * @throws ClientException

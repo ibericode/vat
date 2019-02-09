@@ -3,7 +3,7 @@
 namespace Ibericode\Vat\Tests;
 
 use Ibericode\Vat\Countries;
-use Ibericode\Vat\Exceptions\Exception;
+use Ibericode\Vat\Exception;
 use PHPUnit\Framework\TestCase;
 
 class CountriesTest extends TestCase
@@ -11,11 +11,13 @@ class CountriesTest extends TestCase
     public function testIterator()
     {
         $countries = new Countries();
-        $this->expectNotToPerformAssertions();
 
+        $i = 0;
         foreach ($countries as $code => $country) {
-
+            $i++;
         }
+
+        $this->assertEquals(245, $i);
     }
 
     public function testArrayAccess()
@@ -25,7 +27,7 @@ class CountriesTest extends TestCase
         $this->assertEquals($countries['AF'], 'Afghanistan');
         $this->assertEquals($countries['NL'], 'Netherlands');
 
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $countries['FOO'];
     }
 

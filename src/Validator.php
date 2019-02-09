@@ -12,7 +12,7 @@ class Validator
      * @var array
      * @link http://ec.europa.eu/taxation_customs/vies/faq.html?locale=lt#item_11
      */
-    protected static $patterns = array(
+    private $patterns = [
         'AT' => 'U[A-Z\d]{8}',
         'BE' => '(0\d{9}|\d{10})',
         'BG' => '\d{9,10}',
@@ -41,7 +41,7 @@ class Validator
         'SE' => '\d{12}',
         'SI' => '\d{8}',
         'SK' => '\d{10}'
-    );
+    ];
 
     /**
      * @var Vies\Client
@@ -102,11 +102,11 @@ class Validator
         $country = substr($vatNumber, 0, 2);
         $number = substr($vatNumber, 2);
 
-        if (! isset(self::$patterns[$country]) ) {
+        if (! isset($this->patterns[$country]) ) {
             return false;
         }
 
-        $matches = preg_match('/^' . self::$patterns[$country] . '$/', $number) > 0;
+        $matches = preg_match('/^' . $this->patterns[$country] . '$/', $number) > 0;
         return $matches;
     }
 

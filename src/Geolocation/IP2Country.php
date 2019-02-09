@@ -9,8 +9,8 @@ namespace Ibericode\Vat\Geolocation;
  *
  * @package Ibericode\Vat\Geolocation
  */
-class IP2Country {
-
+class IP2Country
+{
     /**
      * @param string $ipAddress
      * @return string

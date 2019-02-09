@@ -1,10 +1,11 @@
 <?php
 
-namespace Ibericode\Vat\Interfaces;
+namespace Ibericode\Vat\Clients;
 
-use Ibericode\Vat\Exceptions\ClientException;
+use Ibericode\Vat\Exceptions\Exception;
 
-interface Client {
+interface Client
+{
 
     /**
      * This method should return an associative array in the following format:
@@ -15,10 +16,9 @@ interface Client {
      *    ]
      * ]
      *
-     *
-     * @throws ClientException
-     *
+     * @see https://github.com/ibericode/vat-rates*
      * @return array
+     * @throws ClientException
      */
     public function fetch() : array;
 }

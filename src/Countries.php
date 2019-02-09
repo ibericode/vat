@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Ibericode\Vat;
 
-use Ibericode\Vat\Exceptions\Exception;
-
 /**
  * Class Countries
  *
@@ -12,8 +10,8 @@ use Ibericode\Vat\Exceptions\Exception;
  *
  * @package Ibericode\Vat
  */
-class Countries implements \Iterator, \ArrayAccess {
-
+class Countries implements \Iterator, \ArrayAccess
+{
     /**
      * @var array List of ISO-3166-1-alpha2 country-codes + names
      */

@@ -3,7 +3,6 @@
 namespace Ibericode\Vat\Tests;
 
 use Ibericode\Vat\Validator;
-use Ibericode\Vat\Vies;
 
 use PHPUnit\Framework\TestCase;
 
