@@ -26,15 +26,15 @@ class RatesTest extends TestCase
             ->method('fetch')
             ->willReturn([
                 'NL' => [
-                    new Period(new \DateTime('2000/01/01'), [
+                    new Period(new \DateTimeImmutable('2000/01/01'), [
                         'standard' => 19.00,
                         'reduced' => 6.00,
                     ]),
-                    new Period(new \DateTime('2012/01/01'), [
+                    new Period(new \DateTimeImmutable('2012/01/01'), [
                         'standard' => 21.00,
                         'reduced' => 6.00,
                     ]),
-                    new Period(new \DateTime('2019/01/01'), [
+                    new Period(new \DateTimeImmutable('2019/01/01'), [
                         'standard' => 21.00,
                         'reduced' => 9.00,
                     ])

@@ -5,6 +5,7 @@ namespace Ibericode\Vat;
 
 use DateTime;
 use DateTimeInterface;
+use DateTimeImmutable;
 
 use Ibericode\Vat\Clients\ClientException;
 use Ibericode\Vat\Clients\IbericodeVatRatesClient;
@@ -69,7 +70,7 @@ class Rates {
         $this->rates = unserialize($contents, [
             'allowed_classes' => [
                 Period::class,
-                DateTime::class
+                DateTimeImmutable::class
             ]
         ]);
     }

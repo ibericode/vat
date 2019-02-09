@@ -39,7 +39,7 @@ class IbericodeVatRatesClient implements Client
         $result = json_decode($response_body, false);
 
         $return = [];
-        foreach ($result->data as $country => $periods) {
+        foreach ($result->items as $country => $periods) {
 
             foreach ($periods as $i => $period) {
                 $periods[$i] = new Period(new \DateTimeImmutable($period->effective_from), (array) $period->rates);
