@@ -4,11 +4,28 @@ declare(strict_types=1);
 
 namespace Ibericode\Vat;
 
-class Geolocator {
+use Ibericode\Vat\Geolocation\IP2C;
+use Ibericode\Vat\Geolocation\IP2Country;
 
-    public function __construct()
+class Geolocator
+{
+    private $services = [
+        'ip2c.org' => IP2C::class,
+        'ip2country.info' => IP2Country::class,
+    ];
+
+    /**
+     * @var IP2Country|IP2C
+     */
+    private $service;
+
+    public function __construct(string $service = 'ip2c.org')
     {
+        if (!isset($this->services[$service])) {
+            throw new \InvalidArgumentException("Invalid service {$service}");
+        }
 
+        $this->service = new ($this->services[$service]);
     }
 
     public function locateIpAddress(string $ipAddress) : string
@@ -17,21 +34,7 @@ class Geolocator {
             return '';
         }
 
-        $url = sprintf('https://ip2c.org/%s', urlencode($ipAddress));
-
-        $curl_handle = curl_init();
-        curl_setopt($curl_handle, CURLOPT_URL, $url);
-        curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 10);
-        curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, true);
-        $response_body = curl_exec($curl_handle);
-        curl_close($curl_handle);
-
-        if ($response_body === null || $response_body === '') {
-            return '';
-        }
-
-        $parts = explode( ';', $response_body );
-        return $parts[1] === 'ZZ' ? '' : $parts[1];
+        return $this->service->locateIpAddress($ipAddress);
     }
 
 }
