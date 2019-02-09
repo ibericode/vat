@@ -14,13 +14,32 @@ class Rates {
     const RATE_STANDARD = 'standard';
 
     private $rates = [];
-    private $client;
-    private $storagePath;
-    private $ttl;
 
-    public function __construct(string $storagePath = '', int $ttl = 12 * 3600, Client $client = null)
+    /**
+     * @var Client|null
+     */
+    private $client;
+
+    /**
+     * @var string
+     */
+    private $storagePath;
+
+    /**
+     * @var int
+     */
+    private $refreshInterval;
+
+    /**
+     * Rates constructor.
+     *
+     * @param string $storagePath Path to file for storing VAT rates.
+     * @param int $refreshInterval How often to check for new VAT rates. Defaults to every 12 hours.
+     * @param Client|null $client The VAT client to use.
+     */
+    public function __construct(string $storagePath, int $refreshInterval = 12 * 3600, Client $client = null)
     {
-        $this->ttl = $ttl;
+        $this->refreshInterval = $refreshInterval;
         $this->storagePath = $storagePath;
         $this->client = $client;
     }
@@ -34,33 +53,14 @@ class Rates {
         if ($this->storagePath !== '' && file_exists($this->storagePath)) {
             $this->loadFromFile();
 
-            if (filemtime($this->storagePath) > (time() - $this->ttl)) {
+            // bail early if file is still valid
+            // TODO: Store timestamp in file, so we're safe from fs modifications
+            if (filemtime($this->storagePath) > (time() - $this->refreshInterval)) {
                 return;
             }
         }
 
-        try {
-            $this->client = $this->client ?: new IbericodeVatRatesClient();
-            $this->rates = $this->client->fetch();
-        } catch(ClientException $e) {
-            // local file is due for a refresh, but service seems down
-            if (count($this->rates) > 0) {
-                return;
-            }
-
-            throw $e;
-        }
-
-        // Sort periods by DateTime (DESC)
-        foreach ($this->rates as $country => $periods) {
-            usort($this->rates[$country], function (Period $period1, Period $period2) {
-                return $period1->getEffectiveFrom() > $period2->getEffectiveFrom() ? -1 : 1;
-            });
-        }
-
-        if ($this->storagePath !== '') {
-            file_put_contents($this->storagePath, serialize($this->rates));
-        }
+        $this->loadFromRemote();
     }
 
     private function loadFromFile()
@@ -72,6 +72,34 @@ class Rates {
                 DateTime::class
             ]
         ]);
+    }
+
+    private function loadFromRemote()
+    {
+        try {
+            $this->client = $this->client ?: new IbericodeVatRatesClient();
+            $this->rates = $this->client->fetch();
+        } catch(ClientException $e) {
+            // this property could have been populated from the local filesystem at this stage
+            // this ensures the application using this package keeps on running even if the VAT rates service is down
+            if (count($this->rates) > 0) {
+                return;
+            }
+
+            throw $e;
+        }
+
+        // sort periods by DateTime so that later periods come first
+        foreach ($this->rates as $country => $periods) {
+            usort($this->rates[$country], function (Period $period1, Period $period2) {
+                return $period1->getEffectiveFrom() > $period2->getEffectiveFrom() ? -1 : 1;
+            });
+        }
+
+        // update local file with updated rates
+        if ($this->storagePath !== '') {
+            file_put_contents($this->storagePath, serialize($this->rates));
+        }
     }
 
     private function resolvePeriod(string $countryCode, DateTimeInterface $datetime) : Period
