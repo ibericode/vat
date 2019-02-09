@@ -5,7 +5,7 @@ namespace Ibericode\Vat;
 
 use DateTimeInterface;
 use Ibericode\Vat\Cache\NullCache;
-use Ibericode\Vat\Clients\JsonVat;
+use Ibericode\Vat\Clients\IbericodeVatRates;
 use Ibericode\Vat\Exceptions\Exception;
 use Ibericode\Vat\Interfaces\Client;
 use Psr\SimpleCache\CacheInterface;
@@ -40,7 +40,7 @@ class Rates {
             return;
         }
 
-        $this->client = $this->client ?: new JsonVat();
+        $this->client = $this->client ?: new IbericodeVatRates();
         $this->rates = $this->client->fetch();
 
         // Sort periods by DateTime (DESC)

@@ -9,20 +9,19 @@ ibericode/vat
 
 This is a simple PHP library to help you deal with Europe's VAT rules. 
 
-- Fetch (historical) VAT rates for any EU member state using [jsonvat.com](https://github.com/adamcooke/vat-rates)
-- Validate VAT numbers (by format, [existence](http://ec.europa.eu/taxation_customs/vies/) or both)
+- Fetch VAT rates for any EU member state using [ibericode/vat-rates](https://github.com/ibericode/vat-rates) or [jsonvat.com](https://jsonvat.com/)
+- Validate VAT numbers (by format and/or [existence](http://ec.europa.eu/taxation_customs/vies/))
 - Validate ISO-3316 alpha-2 country codes
 - Determine whether a country is part of the EU
 - Geo-locate IP addresses
 
-The library uses jsonvat.com to obtain its data for the VAT rates. Full details can be seen [here](https://github.com/adamcooke/vat-rates).
- To verify the validity of a VAT number, [VIES VAT number validation](http://ec.europa.eu/taxation_customs/vies/) is used.
-
 ## Installation
 
-[PHP](https://php.net) version 7.1 or higher is required. For VAT number existence checking, the PHP SOAP extension is required as well.
+[PHP](https://php.net) version 7.1 or higher with CURL and JSON is required. 
 
-To get the latest version of vat.php, install the package using [Composer](https://getcomposer.org):
+For VAT number existence checking, the PHP SOAP extension is required as well.
+
+To get the latest stable version, install the package using [Composer](https://getcomposer.org):
 
 ```bash
 $ composer require dannyvankooten/vat.php
@@ -30,7 +29,7 @@ $ composer require dannyvankooten/vat.php
 
 ## Usage
 
-This library exposes 3 main classes to interact with, `Rates`, `Countries` and `Validator`.
+This library exposes 4 main classes to interact with: `Rates`, `Countries`, `Validator` and `Geolocator`.
 
 #### Retrieving VAT rates.
 
