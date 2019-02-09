@@ -38,7 +38,7 @@ $rates = new Ibericode\Rates\Rates('/path-for-storing-cached-file');
 $rates->getRateForCountry('NL'); // 21
 $rates->getRateForCountry('NL', 'standard'); // 21
 $rates->getRateForCountry('NL', 'reduced'); // 9
-$rates->getRateForCountryOn('NL', new \Datetime('2010-01-01'), 'standard'); // 19
+$rates->getRateForCountryOnDate('NL', new \Datetime('2010-01-01'), 'standard'); // 19
 ```
 
 This fetches rate from [ibericode/vat-rates](https://github.com/ibericode/vat-rates) and stores a local copy that is periodically refreshed (once every 12 hours by default).
