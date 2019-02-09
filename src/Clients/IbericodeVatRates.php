@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 namespace Ibericode\Vat\Clients;
 
@@ -7,16 +6,15 @@ use Ibericode\Vat\Exceptions\ClientException;
 use Ibericode\Vat\Interfaces\Client;
 use Ibericode\Vat\Period;
 
-class JsonVat implements Client{
-
+class IbericodeVatRates implements Client {
     /**
      * @throws ClientException
      *
      * @return array
      */
-    public function fetch() : array 
+    public function fetch() : array
     {
-        $url = 'https://jsonvat.com/';
+        $url = 'https://raw.githubusercontent.com/ibericode/vat-rates/master/vat-rates.json';
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -36,19 +34,19 @@ class JsonVat implements Client{
 
     private function parseResponse(string $response_body) : array
     {
-        $data = json_decode($response_body, false);
+        $result = json_decode($response_body, false);
 
         $return = [];
-        foreach ($data->rates as $country_rates) {
-            $periods = [];
+        foreach ($result->data as $country => $periods) {
 
-            foreach ($country_rates->periods as $period) {
-                $periods[] = new Period(new \DateTimeImmutable($period->effective_from), (array) $period->rates);
+            foreach ($periods as $i => $period) {
+                $periods[$i] = new Period(new \DateTimeImmutable($period->effective_from), (array) $period->rates);
             }
 
-            $return[$country_rates->country_code] = $periods;
+            $return[$country] = $periods;
         }
 
         return $return;
     }
+
 }
