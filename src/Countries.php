@@ -269,7 +269,7 @@ class Countries implements \Iterator, \ArrayAccess {
      * @param string $code
      * @return bool
      */
-    public function hasCode(string $code) : bool {
+    public function hasCountryCode(string $code) : bool {
         return $this->offsetExists($code);
     }
 
@@ -277,7 +277,7 @@ class Countries implements \Iterator, \ArrayAccess {
      * @param string $code
      * @return bool
      */
-    public function isCodeInEU(string $code) : bool {
+    public function isCountryCodeInEU(string $code) : bool {
         $eu = ['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GB', 'GR', 'HU', 'HR', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK'];
         return in_array($code, $eu);
     }

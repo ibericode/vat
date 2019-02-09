@@ -1,4 +1,4 @@
-vat
+ibericode/vat
 ================
 
 [![Build Status](https://img.shields.io/travis/ibericode/vat.svg)](https://travis-ci.org/ibericode/vat)
@@ -32,37 +32,63 @@ $ composer require dannyvankooten/vat.php
 
 This library exposes 3 main classes to interact with, `Rates`, `Countries` and `Validator`.
 
-#### Fetching VAT rates.
+#### Retrieving VAT rates.
 
 ```php
-$rates = new DvK\Vat\Rates\Rates();
-$rates->country('NL'); // 21
-$rates->country('NL', 'standard'); // 21
-$rates->country('NL', 'standard', new \Datetime('2010-01-01')); // 19
-$rates->country('NL', 'reduced'); // 6
-$rates->all(); // array in country code => rates format
+$rates = new Ibericode\Rates\Rates();
+$rates->getRateForCountry('NL'); // 21
+$rates->getRateForCountry('NL', 'standard'); // 21
+$rates->getRateForCountry('NL', 'reduced'); // 9
+$rates->getRateForCountryOn('NL', new \Datetime('2010-01-01'), 'standard'); // 19
 ```
 
-#### Validating a VAT number
+#### Validation
 
+Validating a VAT number:
 ```php
-$validator = new DvK\Vat\Validator();
-$validator->validate('NL50123'); // false
-$validator->validateFormat('NL203458239B01'); // true (checks format)
-$validator->validateExistence('NL203458239B01'); // false (checks existence)
-$validator->validate('NL203458239B01'); // false (checks format + existence)
+$validator = new Ibericode\Vat\Validator();
+$validator->validateVatNumberFormat('NL203458239B01'); // true (checks format)
+$validator->validateVatNumber('NL203458239B01'); // false (checks format + existence)
+```
+
+Validating an IP address:
+```php
+$validator = new Ibericode\Vat\Validator();
+$validator->validateIpAddress('256.256.256.256'); // false
+$validator->validateIpAddress('8.8.8.8'); // true
+```
+
+Validating an ISO-3166-1-alpha2 country code:
+```php
+$validator = new Ibericode\Vat\Validator();
+$validator->validateCountryCode('DE'); // true
+$validator->validateCountryCode('ZZ'); // false
 ```
 
 
-#### Dealing with countries & geolocation
+#### Dealing with ISO-3166-1-alpha2 country codes
 
 ```php
-$countries = new DvK\Vat\Countries();
-$countries->all(); // array of country codes + names
-$countries->name('NL') // Netherlands
-$countries->europe(); // array of EU country codes + names
-$countries->inEurope('NL'); // true
-$countries->ip('8.8.8.8'); // US
+$countries = new Ibericode\Vat\Countries();
+
+// access country name using array access
+echo $countries['NL']; // Netherlands
+
+// loop over countries
+foreach ($countries as $code => $name) {
+    // ...
+}
+
+// check if country is in EU
+$countries->isCountryCodeInEU('NL'); // true
+$countries->isCountryCodeInEU('US'); // false
+```
+
+#### Geo-location
+This library includes a simple geo-location service using ip2c.org.
+```php
+$geolocator = new Ibericode\Vat\Geolocator();
+$geolocator->locateIpAddress('8.8.8.8'); // US
 ```
 
 #### Symfony support
@@ -71,4 +97,4 @@ If you need to use this package in a Symfony environment, check out [ibericode/v
 
 ## License
 
-vat.php is licensed under the [MIT License](LICENSE).
+ibericode/vat is licensed under the [MIT License](LICENSE).

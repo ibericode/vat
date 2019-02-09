@@ -59,7 +59,7 @@ class Validator
     }
 
     /**
-     * Checks whether the given string is a valid public IPv4 or IPv6 address
+     * Checks whether the given string is a valid ISO-3166-1-alpha2 country code
      *
      * @param string $countryCode
      * @return bool

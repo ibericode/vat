@@ -73,7 +73,7 @@ class Rates {
     }
 
     /**
-     * @param string $countryCode
+     * @param string $countryCode ISO-3166-1-alpha2 country code
      * @param string $level
      * @return float
      * @throws \Exception
@@ -85,7 +85,7 @@ class Rates {
     }
 
     /**
-     * @param string $countryCode
+     * @param string $countryCode ISO-3166-1-alpha2 country code
      * @param DateTimeInterface $datetime
      * @param string $level
      * @return float

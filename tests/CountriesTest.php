@@ -53,16 +53,16 @@ class CountriesTest extends TestCase
     public function testHasCode()
     {
         $countries = new Countries();
-        $this->assertFalse($countries->hasCode('FOO'));
-        $this->assertTrue($countries->hasCode('NL'));
+        $this->assertFalse($countries->hasCountryCode('FOO'));
+        $this->assertTrue($countries->hasCountryCode('NL'));
     }
 
     public function testIsCodeInEU()
     {
         $countries = new Countries();
-        $this->assertFalse($countries->isCodeInEU('FOO'));
-        $this->assertFalse($countries->isCodeInEU('US'));
-        $this->assertTrue($countries->hasCode('NL'));
+        $this->assertFalse($countries->isCountryCodeInEU('FOO'));
+        $this->assertFalse($countries->isCountryCodeInEU('US'));
+        $this->assertTrue($countries->isCountryCodeInEU('NL'));
     }
 
 
