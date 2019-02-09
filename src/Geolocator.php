@@ -25,7 +25,7 @@ class Geolocator
             throw new \InvalidArgumentException("Invalid service {$service}");
         }
 
-        $this->service = new ($this->services[$service]);
+        $this->service = new $this->services[$service]();
     }
 
     public function locateIpAddress(string $ipAddress) : string

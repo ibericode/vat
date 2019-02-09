@@ -21,7 +21,7 @@ class IP2Country {
             return '';
         }
 
-        $url = sprintf('https://ip2country.info/ip?%s', urlencode($ipAddress));
+        $url = sprintf('https://api.ip2country.info/ip?%s', urlencode($ipAddress));
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -36,6 +36,6 @@ class IP2Country {
         }
 
         $data = json_decode($response);
-        return $data['countryCode'];
+        return $data->countryCode;
     }
 }
