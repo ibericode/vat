@@ -67,12 +67,16 @@ class Rates {
     private function loadFromFile()
     {
         $contents = file_get_contents($this->storagePath);
-        $this->rates = unserialize($contents, [
+        $data = unserialize($contents, [
             'allowed_classes' => [
                 Period::class,
                 DateTimeImmutable::class
             ]
         ]);
+
+        if (is_array($data)) {
+            $this->rates = $data;
+        }
     }
 
     private function loadFromRemote()
