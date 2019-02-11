@@ -2,9 +2,9 @@ ibericode/vat
 ================
 
 [![Build Status](https://img.shields.io/travis/ibericode/vat.svg)](https://travis-ci.org/ibericode/vat)
-[![Latest Stable Version](https://img.shields.io/packagist/v/dannyvankooten/vat.php.svg)](https://packagist.org/packages/dannyvankooten/vat.php)
-![PHP from Packagist](https://img.shields.io/packagist/php-v/dannyvankooten/vat.php.svg)
-![Total Downloads](https://img.shields.io/packagist/dt/dannyvankooten/vat.php.svg)
+[![Latest Stable Version](https://img.shields.io/packagist/v/ibericode/vat.svg)](https://packagist.org/packages/ibericode/vat)
+![PHP from Packagist](https://img.shields.io/packagist/php-v/ibericode/vat.svg)
+![Total Downloads](https://img.shields.io/packagist/dt/ibericode/vat.svg)
 ![License](https://img.shields.io/github/license/ibericode/vat.svg)
 
 This is a simple PHP library to help you deal with Europe's VAT rules. 
@@ -17,14 +17,14 @@ This is a simple PHP library to help you deal with Europe's VAT rules.
 
 ## Installation
 
-[PHP](https://php.net) version 7.1 or higher with CURL and JSON is required. 
+[PHP](https://php.net) version 7.1 or higher with the CURL and JSON extension is required. 
 
 For VAT number existence checking, the PHP SOAP extension is required as well.
 
 To get the latest stable version, install the package using [Composer](https://getcomposer.org):
 
 ```bash
-$ composer require dannyvankooten/vat.php
+composer require ibericode/vat
 ```
 
 ## Usage
