@@ -12,8 +12,7 @@
   "require": {
     "php": ">=7.1",
     "ext-curl": "*",
-    "ext-json": "*",
-    "ext-soap": "*",
+    "ext-json": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^7.5"
@@ -33,6 +32,7 @@
   },
   "prefer-stable": true,
   "suggest": {
-    "ibericode/vat-bundle": "Symfony bundle for integrating this package"
+    "ibericode/vat-bundle": "Symfony bundle for integrating this package",
+    "ext-soap": "Needed to support VIES VAT number validation"
   }
 }
