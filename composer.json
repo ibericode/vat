@@ -1,6 +1,6 @@
 {
-  "name": "dannyvankooten/vat.php",
-  "description": "PHP library for dealing with VAT in Europe",
+  "name": "ibericode/vat",
+  "description": "PHP library for dealing with EU VAT",
   "keywords": ["vat"],
   "license": "MIT",
   "authors": [
@@ -35,5 +35,8 @@
   "config": {
     "preferred-install": "dist"
   },
-  "prefer-stable": true
+  "prefer-stable": true,
+  "suggest": {
+    "ibericode/vat-bundle": "Symfony bundle for integrating this package"
+  }
 }
