@@ -43,18 +43,24 @@ class Client {
      */
     public function checkVat(string $countryCode, string $vatNumber) : bool 
     {
-        try {
-            $response = $this->getClient()->checkVat(
-                array(
-                    'countryCode' => $countryCode,
-                    'vatNumber' => $vatNumber
-                )
-            );
-        } catch( SoapFault $e ) {
-            throw new ViesException( $e->getMessage(), $e->getCode() );
-        }
+        $response = $this->checkVatAndGetVatInformation($countryCode, $vatNumber);
 
         return (bool) $response->valid;
+    }
+
+    /**
+     * @param string $countryCode
+     * @param string $vatNumber
+     *
+     * @return array
+     *
+     * @throws ViesException
+     */
+    public function checkVatAndReturnArrayVatInformation(string $countryCode, string $vatNumber) : array
+    {
+        $response = $this->checkVatAndGetVatInformation($countryCode, $vatNumber);
+
+        return (array) $response;
     }
 
     /**
@@ -67,5 +73,29 @@ class Client {
         }
 
         return $this->client;
+    }
+
+    /**
+     * @param string $countryCode
+     * @param string $vatNumber
+     *
+     * @return mixed
+     *
+     * @throws ViesException
+     */
+    protected function checkVatAndGetVatInformation(string $countryCode, string $vatNumber)
+    {
+        try {
+            $response = $this->getClient()->checkVat(
+                array(
+                    'countryCode' => $countryCode,
+                    'vatNumber' => $vatNumber
+                )
+            );
+        } catch (SoapFault $e) {
+            throw new ViesException($e->getMessage(), $e->getCode());
+        }
+
+        return $response;
     }
 }
