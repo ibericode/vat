@@ -65,4 +65,43 @@ class Client {
 
         return $this->client;
     }
+
+    /**
+     * @param string $countryCode
+     * @param string $vatNumber
+     *
+     * @return mixed
+     *
+     * @throws ViesException
+     */
+    protected function checkVatAndGetVatInformation($countryCode, $vatNumber)
+    {
+        try {
+            $response = $this->getClient()->checkVat(
+                array(
+                    'countryCode' => $countryCode,
+                    'vatNumber' => $vatNumber
+                )
+            );
+        } catch( SoapFault $e ) {
+            throw new ViesException( $e->getMessage(), $e->getCode() );
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param string $countryCode
+     * @param string $vatNumber
+     *
+     * @return array
+     *
+     * @throws ViesException
+     */
+    public function checkVatAndReturnArrayVatInformation($countryCode, $vatNumber)
+    {
+        $response = $this->checkVatAndGetVatInformation($countryCode, $vatNumber);
+
+        return (array) $response;
+    }
 }

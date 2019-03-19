@@ -66,9 +66,7 @@ class Validator {
      * @return boolean
      */
     public function validateFormat( $vatNumber ) {
-        $vatNumber = strtoupper( $vatNumber );
-        $country = substr( $vatNumber, 0, 2 );
-        $number = substr( $vatNumber, 2 );
+        list($country, $number) = $this->splitVat($vatNumber);
 
         if( ! isset( self::$patterns[$country]) ) {
             return false;
@@ -87,10 +85,22 @@ class Validator {
      * @throws Vies\ViesException
      */
     public function validateExistence($vatNumber) {
-        $vatNumber = strtoupper( $vatNumber );
-        $country = substr( $vatNumber, 0, 2 );
-        $number = substr( $vatNumber, 2 );
+        list($country, $number) = $this->splitVat($vatNumber);
         return $this->client->checkVat($country, $number);
+    }
+
+    /**
+     * @param string $vatNumber
+     *
+     * @return array
+     *
+     * @throws Vies\ViesException
+     */
+    public function validateExistenceAndGetInformation($vatNumber)
+    {
+        list($country, $number) = $this->splitVat($vatNumber);
+
+        return $this->client->checkVatAndReturnArrayVatInformation($country, $number);
     }
 
     /**
@@ -105,6 +115,22 @@ class Validator {
     public function validate( $vatNumber ) {
        return $this->validateFormat( $vatNumber ) && $this->validateExistence( $vatNumber );
     }
+
+    /**
+     * @param string $vatNumber
+     *
+     * @return array
+     */
+    protected function splitVat($vatNumber)
+    {
+        $vatNumber = strtoupper($vatNumber);
+        $country = substr($vatNumber, 0, 2);
+        $number = substr($vatNumber, 2);
+
+        return array($country, $number);
+    }
+
+
 
 
 }
