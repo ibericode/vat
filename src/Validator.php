@@ -1,12 +1,10 @@
 <?php
-namespace DvK\Vat;
+declare(strict_types=1);
 
-/**
- * Class Validator
- *
- * @package DvK\Vat
- */
-class Validator {
+namespace Ibericode\Vat;
+
+class Validator
+{
 
     /**
      * Regular expression patterns per country code
@@ -14,7 +12,7 @@ class Validator {
      * @var array
      * @link http://ec.europa.eu/taxation_customs/vies/faq.html?locale=lt#item_11
      */
-    protected static $patterns = array(
+    private $patterns = [
         'AT' => 'U[A-Z\d]{8}',
         'BE' => '(0\d{9}|\d{10})',
         'BG' => '\d{9,10}',
@@ -43,19 +41,48 @@ class Validator {
         'SE' => '\d{12}',
         'SI' => '\d{8}',
         'SK' => '\d{10}'
-    );
+    ];
+
+    /**
+     * @var Vies\Client
+     */
+    private $client;
 
     /**
      * VatValidator constructor.
      *
      * @param Vies\Client $client        (optional)
      */
-    public function __construct( Vies\Client $client = null ) {
-        $this->client = $client;
+    public function __construct(Vies\Client $client = null)
+    {
+        $this->client = $client ?: new Vies\Client();
+    }
 
-        if( ! $this->client ) {
-            $this->client = new Vies\Client();
+    /**
+     * Checks whether the given string is a valid ISO-3166-1-alpha2 country code
+     *
+     * @param string $countryCode
+     * @return bool
+     */
+    public function validateCountryCode(string $countryCode) : bool
+    {
+        $countries = new Countries();
+        return isset($countries[$countryCode]);
+    }
+
+    /**
+     * Checks whether the given string is a valid public IPv4 or IPv6 address
+     *
+     * @param string $ipAddress
+     * @return bool
+     */
+    public function validateIpAddress(string $ipAddress) : bool
+    {
+        if ($ipAddress === '') {
+            return false;
         }
+
+        return (bool) filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE);
     }
 
     /**
@@ -65,14 +92,20 @@ class Validator {
      *
      * @return boolean
      */
-    public function validateFormat( $vatNumber ) {
+    public function validateVatNumberFormat(string $vatNumber) : bool
+
+    {
+		if ($vatNumber === '')
+        {
+            return false;
+        }
         list($country, $number) = $this->splitVat($vatNumber);
 
-        if( ! isset( self::$patterns[$country]) ) {
+        if (! isset($this->patterns[$country]) ) {
             return false;
         }
 
-        $matches = preg_match( '/^' . self::$patterns[$country] . '$/', $number ) > 0;
+        $matches = preg_match('/^' . $this->patterns[$country] . '$/', $number) > 0;
         return $matches;
     }
 
@@ -84,7 +117,8 @@ class Validator {
      *
      * @throws Vies\ViesException
      */
-    public function validateExistence($vatNumber) {
+    protected function validateVatNumberExistence(string $vatNumber) : bool
+	{
         list($country, $number) = $this->splitVat($vatNumber);
         return $this->client->checkVat($country, $number);
     }
@@ -99,7 +133,6 @@ class Validator {
     public function validateExistenceAndGetInformation($vatNumber)
     {
         list($country, $number) = $this->splitVat($vatNumber);
-
         return $this->client->checkVatAndReturnArrayVatInformation($country, $number);
     }
 
@@ -112,16 +145,18 @@ class Validator {
      *
      * @throws Vies\ViesException
      */
-    public function validate( $vatNumber ) {
-       return $this->validateFormat( $vatNumber ) && $this->validateExistence( $vatNumber );
+    public function validateVatNumber(string $vatNumber) : bool
+    {
+       return $this->validateVatNumberFormat($vatNumber) && $this->validateVatNumberExistence($vatNumber);
     }
+
 
     /**
      * @param string $vatNumber
      *
      * @return array
      */
-    protected function splitVat($vatNumber)
+    protected function splitVat(string $vatNumber): array
     {
         $vatNumber = strtoupper($vatNumber);
         $country = substr($vatNumber, 0, 2);
@@ -129,8 +164,4 @@ class Validator {
 
         return array($country, $number);
     }
-
-
-
-
 }

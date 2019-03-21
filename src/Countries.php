@@ -1,17 +1,21 @@
 <?php
+declare(strict_types=1);
 
-namespace DvK\Vat;
+namespace Ibericode\Vat;
 
 /**
  * Class Countries
  *
- * This class contains a few helpers methods for dealing with ISO-3166-1-alpha2 countries (and EC exceptions)
+ * This class contains ISO-3166-1-alpha2 country code data, plus a few common helpers for dealing with EU VAT.
  *
- * @package DvK\Vat
+ * @package Ibericode\Vat
  */
-class Countries {
-
-    private static $all = [
+class Countries implements \Iterator, \ArrayAccess
+{
+    /**
+     * @var array List of ISO-3166-1-alpha2 country-codes + names
+     */
+    private $data = [
         'AF' => 'Afghanistan',
         'AX' => 'Aland Islands',
         'AL' => 'Albania',
@@ -259,132 +263,123 @@ class Countries {
         'ZW' => 'Zimbabwe',
     ];
 
-    private static $eu = [
-        'AT',
-        'BE',
-        'BG',
-        'CY',
-        'CZ',
-        'DE',
-        'DK',
-        'EE',
-        'ES',
-        'FI',
-        'FR',
-        'GB',
-        'GR',
-        'HU',
-        'HR',
-        'IE',
-        'IT',
-        'LT',
-        'LU',
-        'LV',
-        'MT',
-        'NL',
-        'PL',
-        'PT',
-        'RO',
-        'SE',
-        'SI',
-        'SK'
-    ];
-
     /**
-     * Get all countries in code => name format
-     *
-     * @return array
-     */
-    public function all() {
-        return self::$all;
-    }
-
-    /**
-     * Get all EU countries in code => name format
-     *
-     * @return array
-     */
-    public function europe() {
-        $codes = self::$eu;
-        $countries = [];
-
-        foreach($codes as $code){
-            $countries[$code] = self::$all[$code];
-        }
-
-        return $countries;
-    }
-
-    /**
-     * Get full country name for a given country code
-     *
      * @param string $code
-     *
-     * @return string
-     */
-    public function name($code) {
-        $code = strtoupper($code);
-        return self::$all[$code];
-    }
-
-    /**
-     * Checks whether the given country is in the EU
-     *
-     * @param string $code
-     *
      * @return bool
      */
-    public function inEurope($code) {
-        $code = strtoupper($code);
-        return in_array($code, self::$eu);
+    public function hasCountryCode(string $code) : bool {
+        return $this->offsetExists($code);
     }
 
     /**
-     * Gets the country code by IP address
-     *
-     * @link http://about.ip2c.org/
-     *
-     * @param string $ip
-     *
-     * @return string
-     */
-    public function ip($ip) {
-        $url = 'https://ip2c.org/' . $ip;
-
-        $curl_handle = curl_init();
-        curl_setopt($curl_handle, CURLOPT_URL, $url);
-        curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 10);
-        curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, true);
-        $response_body = curl_exec($curl_handle);
-        curl_close($curl_handle);
-
-        if(!empty($response_body)) {
-            $parts = explode( ';', $response_body );
-            return $parts[1] === 'ZZ' ? '' : $parts[1];
-        }
-
-        return '';
-    }
-
-    /**
-     * Get country codes which are used by European Commissions (exceptions to ISO-3166-1-alpha2)
-     *
-     * @link
-     *
      * @param string $code
-     * @return string
+     * @return bool
      */
-    public function fixCode($code) {
-        static $exceptions = array(
-            'GR' => 'EL',
-            'UK' => 'GB',
-        );
+    public function isCountryCodeInEU(string $code) : bool {
+        $eu = ['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GB', 'GR', 'HU', 'HR', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK'];
+        return in_array($code, $eu);
+    }
 
-        if( isset( $exceptions[$code] ) ) {
-            return $exceptions[$code];
+
+    /**
+     * Return the current element
+     * @link https://php.net/manual/en/iterator.current.php
+     * @return mixed Can return any type.
+     * @since 5.0.0
+     */
+    public function current()
+    {
+        return current($this->data);
+    }
+
+    /**
+     * Move forward to next element
+     * @link https://php.net/manual/en/iterator.next.php
+     * @return void Any returned value is ignored.
+     * @since 5.0.0
+     */
+    public function next()
+    {
+        next($this->data);
+    }
+
+    /**
+     * Return the key of the current element
+     * @link https://php.net/manual/en/iterator.key.php
+     * @return mixed scalar on success, or null on failure.
+     * @since 5.0.0
+     */
+    public function key()
+    {
+        return key($this->data);
+    }
+
+    /**
+     * Checks if current position is valid
+     * @link https://php.net/manual/en/iterator.valid.php
+     * @return boolean The return value will be casted to boolean and then evaluated.
+     * Returns true on success or false on failure.
+     * @since 5.0.0
+     */
+    public function valid()
+    {
+        return key($this->data) !== null;
+    }
+
+    /**
+     * Rewind the Iterator to the first element
+     * @link https://php.net/manual/en/iterator.rewind.php
+     * @return void Any returned value is ignored.
+     * @since 5.0.0
+     */
+    public function rewind()
+    {
+        reset($this->data);
+    }
+
+    /**
+     * @param string $countryCode
+     * @return bool
+     */
+    public function offsetExists($countryCode)
+    {
+        return isset($this->data[$countryCode]);
+    }
+
+    /**
+     * @param string $countryCode
+     * @return string
+     * @throws \Exception
+     */
+    public function offsetGet($countryCode)
+    {
+        if (!$this->offsetExists($countryCode)) {
+            throw new Exception("Invalid country code {$countryCode}");
         }
 
-        return $code;
+        return $this->data[$countryCode];
     }
+
+    /**
+     * @param string $countryCode
+     * @param string $name
+     * @return string
+     * @throws \Exception
+     */
+    public function offsetSet($countryCode, $name)
+    {
+        throw new Exception('Invalid use of Countries class');
+    }
+
+    /**
+     * @param string $countryCode
+     * @return string
+     * @throws \Exception
+     */
+    public function offsetUnset($countryCode)
+    {
+        throw new Exception('Invalid use of Countries class');
+    }
+
 
 }

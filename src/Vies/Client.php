@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace DvK\Vat\Vies;
+namespace Ibericode\Vat\Vies;
 
 use SoapClient;
 use SoapFault;
@@ -27,7 +28,8 @@ class Client {
      * 
      * @param int $timeout How long should we wait before aborting the request to VIES?
      */
-    public function __construct($timeout = 10) {
+    public function __construct(int $timeout = 10) 
+    {
         $this->timeout = $timeout;
     }
 
@@ -39,16 +41,31 @@ class Client {
      *
      * @throws ViesException
      */
-	public function checkVat($countryCode, $vatNumber)
-	{
-		$response = $this->checkVatAndGetVatInformation($countryCode, $vatNumber);
-		return (bool) $response->valid;
-	}
+    public function checkVat(string $countryCode, string $vatNumber) : bool 
+    {
+        $response = $this->checkVatAndGetVatInformation($countryCode, $vatNumber);
+	    return (bool) $response->valid;
+    }
+
+    /**
+     * @param string $countryCode
+     * @param string $vatNumber
+     *
+     * @return array
+     *
+     * @throws ViesException
+     */
+    public function checkVatAndReturnArrayVatInformation(string $countryCode, string $vatNumber) : array
+    {
+        $response = $this->checkVatAndGetVatInformation($countryCode, $vatNumber);
+
+        return (array) $response;
+    }
 
     /**
      * @return SoapClient
      */
-    protected function getClient()
+    protected function getClient() : SoapClient
     {
         if ($this->client === null) {
             $this->client = new SoapClient(self::URL, ['connection_timeout' => $this->timeout]);
@@ -64,28 +81,19 @@ class Client {
      *
      * @throws ViesException
      */
-    protected function checkVatAndGetVatInformation($countryCode, $vatNumber)
+    protected function checkVatAndGetVatInformation(string $countryCode, string $vatNumber)
     {
         try {
-            $response = $this->checkVat($countryCode, $vatNumber);
-        } catch( SoapFault $e ) {
-            throw new ViesException( $e->getMessage(), $e->getCode() );
+            $response = $this->getClient()->checkVat(
+                array(
+                    'countryCode' => $countryCode,
+                    'vatNumber' => $vatNumber
+                )
+            );
+        } catch (SoapFault $e) {
+            throw new ViesException($e->getMessage(), $e->getCode());
         }
 
         return $response;
-    }
-
-    /**
-     * @param string $countryCode
-     * @param string $vatNumber
-     *
-     * @return array
-     *
-     * @throws ViesException
-     */
-    public function checkVatAndReturnArrayVatInformation($countryCode, $vatNumber)
-    {
-        $response = $this->checkVatAndGetVatInformation($countryCode, $vatNumber);
-        return (array) $response;
     }
 }

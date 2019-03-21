@@ -1,231 +1,109 @@
 <?php
 
-namespace DvK\Tests\Vat;
+namespace Ibericode\Vat\Tests;
 
-use DvK\Vat\Rates\Caches\NullCache;
-use DvK\Vat\Rates\Exceptions\Exception;
-use DvK\Vat\Rates\Rates;
-use DvK\Vat\Rates\Clients\JsonVat;
+use Ibericode\Vat\Clients\ClientException;
+use Ibericode\Vat\Clients\JsonVatClient;
+use Ibericode\Vat\Exception;
+use Ibericode\Vat\Period;
+use Ibericode\Vat\Rates;
+use PHPUnit\Framework\Error\Error;
+use PHPUnit\Framework\TestCase;
 
-use PHPUnit_Framework_TestCase;
-
-/**
- * Class RatesTest
- *
- * @package DvK\Tests\Vat
- */
-class RatesTest extends PHPUnit_Framework_TestCase
+class RatesTest extends TestCase
 {
-    /**
-     * Mock JsonVat client so remote API is not hit
-     *
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    public function getClientMock() {
-        $mock = self::getMockBuilder(JsonVat::class)
-            ->getMock();
-       return $mock;
+    public function setUp() : void
+    {
+        if (file_exists('vendor/rates')) {
+            unlink('vendor/rates');
+        }
     }
 
-    /**
-     * Mock Cache clientso we can test whether put and get methods are being called without depending on a Cache class.
-     *
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    public function getCacheMock() {
-        $mock = self::getMockBuilder(NullCache::class)
-            ->getMock();
-
-        return $mock;
-    }
-
-    /**
-     * @throws Exception
-     *
-     * @covers Rates::country
-     */
-    public function test_country() {
-        $data = [
-            'NL' => [
-                'name'         => 'Netherlands',
-                'code'         => 'NL',
-                'country_code' => 'NL',
-                'periods'      =>
-                    [
-                        [
-                            'effective_from' => '2020-01-01',
-                            'rates'          =>
-                                [
-                                    'reduced'  => 7.0,
-                                    'standard' => 22.0,
-                                ],
-                        ],
-                        [
-                            'effective_from' => '2012-10-01',
-                            'rates'          =>
-                                [
-                                    'reduced'  => 6.0,
-                                    'standard' => 21.0,
-                                ],
-                        ],
-                        [
-                            'effective_from' => '0000-01-01',
-                            'rates'          =>
-                                [
-                                    'reduced'  => 5.0,
-                                    'standard' => 19.0,
-                                ],
-                        ],
-                    ],
-            ]
-        ];
-        $mock = $this->getClientMock();
-        $mock
+    private function getJsonVatMock()
+    {
+        $client = $this->getMockBuilder(JsonVatClient::class)->getMock();
+        $client
             ->method('fetch')
-            ->will(self::returnValue( $data ));
+            ->willReturn([
+                'NL' => [
+                    new Period(new \DateTimeImmutable('2000/01/01'), [
+                        'standard' => 19.00,
+                        'reduced' => 6.00,
+                    ]),
+                    new Period(new \DateTimeImmutable('2012/01/01'), [
+                        'standard' => 21.00,
+                        'reduced' => 6.00,
+                    ]),
+                    new Period(new \DateTimeImmutable('2019/01/01'), [
+                        'standard' => 21.00,
+                        'reduced' => 9.00,
+                    ])
+                ]
+            ]);
 
-        $rates = new Rates($mock, null);
+        $client
+            ->expects($this->once())
+            ->method('fetch');
 
-        // Return correct VAT rates
-        self::assertEquals(  $rates->country('NL'), 21 );
-        self::assertEquals(  $rates->country('NL', 'reduced'), 6 );
-
-        // Return correct VAT rates on an older period
-        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2010-01-01')), 19);
-        self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2010-01-01')), 5);
-
-        // Return correct VAT rates on an future period
-        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2022-01-01')), 22);
-        self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2022-01-01')), 7);
-
-        // Exception when supplying country code for which we have no rate
-        self::expectException( 'Exception' );
-        $rates->country('US');
+        return $client;
     }
 
-    /**
-     * @covers Rates::all()
-     */
-    public function test_all() {
-        $data = [
-            'NL' => [
-                'name'         => 'Netherlands',
-                'code'         => 'NL',
-                'country_code' => 'NL',
-                'periods'      =>
-                    [
-                        [
-                            'effective_from' => '2020-01-01',
-                            'rates'          =>
-                                [
-                                    'reduced'  => 7.0,
-                                    'standard' => 22.0,
-                                ],
-                        ],
-                        [
-                            'effective_from' => '2012-10-01',
-                            'rates'          =>
-                                [
-                                    'reduced'  => 6.0,
-                                    'standard' => 21.0,
-                                ],
-                        ],
-                        [
-                            'effective_from' => '0000-01-01',
-                            'rates'          =>
-                                [
-                                    'reduced'  => 5.0,
-                                    'standard' => 19.0,
-                                ],
-                        ],
-                    ],
-            ]
-        ];
-        $mock = $this->getClientMock();
-        $mock
-            ->method('fetch')
-            ->will(self::returnValue( $data ));
-
-        $rates = new Rates($mock, null);
-        self::assertEquals( $data, $rates->all());
+    public function testGetRateForCountry()
+    {
+        $client = $this->getJsonVatMock();
+        $rates = new Rates('vendor/rates', 30, $client);
+        $this->assertEquals(21.0,  $rates->getRateForCountry('NL'));
     }
 
-    /**
-     * @covers Rates::load
-     */
-    public function test_ratesAreLoadedFromCache() {
-        $mock = $this->getCacheMock();
-        $data = [
-            'NL' => [
-                'name'         => 'Netherlands',
-                'code'         => 'NL',
-                'country_code' => 'NL',
-                'periods'      =>
-                    [
-                        [
-                            'effective_from' => '2020-01-01',
-                            'rates'          =>
-                                [
-                                    'reduced'  => 7.0,
-                                    'standard' => 22.0,
-                                ],
-                        ],
-                        [
-                            'effective_from' => '2012-10-01',
-                            'rates'          =>
-                                [
-                                    'reduced'  => 6.0,
-                                    'standard' => 21.0,
-                                ],
-                        ],
-                        [
-                            'effective_from' => '0000-01-01',
-                            'rates'          =>
-                                [
-                                    'reduced'  => 5.0,
-                                    'standard' => 19.0,
-                                ],
-                        ],
-                    ],
-            ]
-        ];
+    public function testGetRateForCountryOnDate()
+    {
+        $client = $this->getJsonVatMock();
+        $rates = new Rates('vendor/rates', 30, $client);
+        $this->assertEquals(19.0,  $rates->getRateForCountryOnDate('NL', new \DateTime('2011/01/01')));
+        $this->assertEquals(6.0,  $rates->getRateForCountryOnDate('NL', new \DateTime('2018/01/01'), 'reduced'));
 
-        $mock
-            ->method('get')
-            ->with('vat-rates')
-            ->will(self::returnValue($data));
-
-        $rates = new Rates( null, $mock );
-
-        self::assertNotEmpty($rates->all());
-        self::assertEquals($rates->all(), $data);
-
-        // Return correct VAT rates
-        self::assertEquals($rates->country('NL'), 21);
-        self::assertEquals($rates->country('NL', 'reduced'), 6);
-
-        // Return correct VAT rates on an older period
-        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2010-01-01')), 19);
-        self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2010-01-01')), 5);
-
-        // Return correct VAT rates on an future period
-        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2022-01-01')), 22);
-        self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2022-01-01')), 7);
+        $this->assertEquals(21.0,  $rates->getRateForCountryOnDate('NL', new \DateTime('2019/01/01')));
+        $this->assertEquals(9.0,  $rates->getRateForCountryOnDate('NL', new \DateTime('2019/01/01'), 'reduced'));
     }
 
-    /**
-     *  @covers Rates::load
-     */
-    public function test_ratesAreStoredInCache() {
-        $cacheMock = $this->getCacheMock();
-        $clientMock = $this->getClientMock();
-
-        $cacheMock
-            ->expects(self::once())
-            ->method('set');
-
-        $rates = new Rates( $clientMock, $cacheMock );
+    public function testGetRateForCountryWithInvalidCountryCode()
+    {
+        $client = $this->getJsonVatMock();
+        $rates = new Rates('vendor/rates', 30, $client);
+        $this->expectException(Exception::class);
+        $rates->getRateForCountry('FOO');
     }
 
+    public function testRatesAreLoadedFromFile()
+    {
+        $client = $this->getJsonVatMock();
+        $rates = new Rates('vendor/rates', 30, $client);
+        $this->assertEquals(21.0,  $rates->getRateForCountry('NL'));
+
+        // test by ensuring client::fetch is never called
+        $rates = new Rates('vendor/rates', 30, $client);
+        $client->expects($this->never())->method('fetch');
+        $this->assertEquals(21.0,  $rates->getRateForCountry('NL'));
+
+        // test by invalidating file and testing for exception
+        file_put_contents('vendor/rates', 'foobar');
+        $rates = new Rates('vendor/rates', 30, $client);
+        $this->expectException(Error::class);
+        $this->assertEquals(21.0,  $rates->getRateForCountry('NL'));
+    }
+
+    public function testRatesAreLoadedFromFileOnClientException()
+    {
+        // first, populate local file
+        $client = $this->getJsonVatMock();
+        $rates = new Rates('vendor/rates', 10, $client);
+        $this->assertEquals(21.0,  $rates->getRateForCountry('NL'));
+
+        // then, perform test
+        $client = $this->getJsonVatMock();
+        $client->method('fetch')->willThrowException(new ClientException('Service is down'));
+        $rates = new Rates('vendor/rates', -1, $client);
+        $this->assertEquals(21.0,  $rates->getRateForCountry('NL'));
+    }
 
 }

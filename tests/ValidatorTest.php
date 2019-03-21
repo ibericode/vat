@@ -1,11 +1,10 @@
 <?php
 
-namespace DvK\Tests\Vat;
+namespace Ibericode\Vat\Tests;
 
-use DvK\Vat\Validator;
-use DvK\Vat\Vies;
+use Ibericode\Vat\Validator;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ValidatorTest
@@ -13,13 +12,13 @@ use PHPUnit_Framework_TestCase;
  *
  * Todo: Tests for validate method
  */
-class ValidatorTest extends PHPUnit_Framework_TestCase
+class ValidatorTest extends TestCase
 {
 
     /**
-     * @covers Validator::validateFormat
+     * @covers Validator::validateVatNumberFormat
      */
-    public function test_validateFormat() {
+    public function testValidateVatNumberFormat() {
         $valid = [
             'ATU12345678',
             'BE0123456789',
@@ -55,7 +54,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
 
         $validator = new Validator();
         foreach( $valid as $format ) {
-            self::assertTrue( $validator->validateFormat( $format ), "{$format} did not pass validation." );
+            self::assertTrue( $validator->validateVatNumberFormat( $format ), "{$format} did not pass validation." );
         }
 
         $invalid = [
@@ -93,27 +92,88 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         ];
 
         foreach( $invalid as $format ) {
-            $isValid = $validator->validateFormat( $format );
+            $isValid = $validator->validateVatNumberFormat( $format );
             self::assertFalse( $isValid, "{$format} passed validation, but shouldn't." );
         }
     }
 
     /**
-     * @covers Validator::validateExistence
+     * @dataProvider validIpAddresses
      */
-    public function test_validateExistence() {
-        $mock = self::getMockBuilder(Vies\Client::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mock
-            ->expects(self::once())
-            ->method('checkVat')
-            ->with('NL','123456789')
-            ->will(self::returnValue(true));
-
-        $validator = new Validator( $mock );
-        self::assertTrue( $validator->validateExistence('NL123456789') );
+    public function testValidateIpAddressWithValid($value)
+    {
+        $validator = new Validator();
+        $this->assertTrue($validator->validateIpAddress($value));
     }
+
+    public function validIpAddresses()
+    {
+        return [
+            ['8.8.8.8'],
+            ['54.18.12.111']
+        ];
+    }
+
+    /**
+     * @dataProvider invalidIpAddresses
+     */
+    public function testValidateIpAddressWithInvalidValues($value)
+    {
+        $validator = new Validator();
+        $this->assertFalse($validator->validateIpAddress($value));
+    }
+
+    public function invalidIpAddresses()
+    {
+        return [
+            ['0.8.8.8.8'],
+            ['foo.bar'],
+            ['192.168.1.10'], // local range
+        ];
+    }
+
+    /**
+     * @dataProvider validCountryCodes
+     */
+    public function testValidateCountryCodeWithValidValues($value)
+    {
+        $validator = new Validator();
+        $this->assertTrue($validator->validateCountryCode($value));
+    }
+
+    /**
+     * @dataProvider invalidCountryCodes
+     */
+    public function testValidateCountryCodeWithInvalidValues($value)
+    {
+        $validator = new Validator();
+        $this->assertFalse($validator->validateCountryCode($value));
+    }
+
+
+    public function validCountryCodes()
+    {
+        return [
+           ['NL'],
+           ['DE'],
+           ['US'],
+           ['GB'],
+        ];
+    }
+
+    public function invalidCountryCodes()
+    {
+        return [
+            ['FOO'],
+            ['false'],
+            ['null'],
+            ['0'],
+            ['nl'],
+        ];
+    }
+
+
+
+
 
 }

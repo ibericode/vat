@@ -1,37 +1,73 @@
 <?php
 
-namespace DvK\Tests\Vat;
+namespace Ibericode\Vat\Tests;
 
-use DvK\Vat\Countries;
-use PHPUnit_Framework_TestCase;
+use Ibericode\Vat\Countries;
+use Ibericode\Vat\Exception;
+use PHPUnit\Framework\TestCase;
 
-/**
- * Class CountriesTest
- * @package DvK\Tests\Vat
- *
- */
-class CountriesTest extends PHPUnit_Framework_TestCase
+class CountriesTest extends TestCase
 {
-    /**
-     * @covers Countries::name
-     */
-    public function test_name() {
+    public function testIterator()
+    {
         $countries = new Countries();
-        self::assertEquals( 'United States', $countries->name('US'));
+
+        $i = 0;
+        foreach ($countries as $code => $country) {
+            $i++;
+        }
+
+        $this->assertEquals(245, $i);
     }
-    /**
-     * @covers Countries::inEurope
-     */
-    public function test_inEurope() {
+
+    public function testArrayAccess()
+    {
         $countries = new Countries();
-        $invalid = [ 'US', '', 'NE', 'JP', 'RU' ];
-        foreach( $invalid as $country ) {
-            self::assertFalse( $countries->inEurope( $country ) );
-        }
-        $valid = [ 'NL', 'nl', 'GB', 'GR', 'BE' ];
-        foreach( $valid as $country ) {
-            self::assertTrue( $countries->inEurope( $country ) );
-        }
+
+        $this->assertEquals($countries['AF'], 'Afghanistan');
+        $this->assertEquals($countries['NL'], 'Netherlands');
+
+        $this->expectException(Exception::class);
+        $countries['FOO'];
     }
-    
+
+    public function testArrayAccessWithInvalidCountryCode()
+    {
+        $countries = new Countries();
+        $this->expectException(Exception::class);
+        $countries['FOO'];
+    }
+
+    public function testArrayAccessSetValue()
+    {
+        $countries = new Countries();
+        $this->expectException(Exception::class);
+        $countries['FOO'] = 'bar';
+    }
+
+    public function testArrayAccessUnsetValue()
+    {
+        $countries = new Countries();
+        $this->expectException(Exception::class);
+        unset($countries['FOO']);
+    }
+
+    public function testHasCode()
+    {
+        $countries = new Countries();
+        $this->assertFalse($countries->hasCountryCode('FOO'));
+        $this->assertTrue($countries->hasCountryCode('NL'));
+    }
+
+    public function testIsCodeInEU()
+    {
+        $countries = new Countries();
+        $this->assertFalse($countries->isCountryCodeInEU('FOO'));
+        $this->assertFalse($countries->isCountryCodeInEU('US'));
+        $this->assertTrue($countries->isCountryCodeInEU('NL'));
+    }
+
+
+
 }
+
