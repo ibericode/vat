@@ -53,7 +53,7 @@ class Validator
      *
      * @param Vies\Client $client        (optional)
      */
-    public function __construct(Vies\Client $client = null) 
+    public function __construct(Vies\Client $client = null)
     {
         $this->client = $client ?: new Vies\Client();
     }
@@ -102,7 +102,7 @@ class Validator
         $country = substr($vatNumber, 0, 2);
         $number = substr($vatNumber, 2);
 
-        if (! isset($this->patterns[$country]) ) {
+        if (! isset($this->patterns[$country])) {
             return false;
         }
 
@@ -120,7 +120,7 @@ class Validator
      */
     protected function validateVatNumberExistence(string $vatNumber) : bool
     {
-        $vatNumber = strtoupper( $vatNumber);
+        $vatNumber = strtoupper($vatNumber);
         $country = substr($vatNumber, 0, 2);
         $number = substr($vatNumber, 2);
         return $this->client->checkVat($country, $number);
@@ -137,8 +137,6 @@ class Validator
      */
     public function validateVatNumber(string $vatNumber) : bool
     {
-       return $this->validateVatNumberFormat($vatNumber) && $this->validateVatNumberExistence($vatNumber);
+        return $this->validateVatNumberFormat($vatNumber) && $this->validateVatNumberExistence($vatNumber);
     }
-
-
 }

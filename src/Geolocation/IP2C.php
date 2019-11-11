@@ -37,7 +37,7 @@ class IP2C
             return '';
         }
 
-        $parts = explode( ';', $response );
+        $parts = explode(';', $response);
         return $parts[1] === 'ZZ' ? '' : $parts[1];
     }
 }

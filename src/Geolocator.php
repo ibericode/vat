@@ -36,5 +36,4 @@ class Geolocator
 
         return $this->service->locateIpAddress($ipAddress);
     }
-
 }

@@ -18,7 +18,8 @@ class ValidatorTest extends TestCase
     /**
      * @covers Validator::validateVatNumberFormat
      */
-    public function testValidateVatNumberFormat() {
+    public function testValidateVatNumberFormat()
+    {
         $valid = [
             'ATU12345678',
             'BE0123456789',
@@ -53,8 +54,8 @@ class ValidatorTest extends TestCase
         ];
 
         $validator = new Validator();
-        foreach( $valid as $format ) {
-            self::assertTrue( $validator->validateVatNumberFormat( $format ), "{$format} did not pass validation." );
+        foreach ($valid as $format) {
+            self::assertTrue($validator->validateVatNumberFormat($format), "{$format} did not pass validation.");
         }
 
         $invalid = [
@@ -91,9 +92,9 @@ class ValidatorTest extends TestCase
             'fooGB999999973', // valid VAT number but with string prefix
         ];
 
-        foreach( $invalid as $format ) {
-            $isValid = $validator->validateVatNumberFormat( $format );
-            self::assertFalse( $isValid, "{$format} passed validation, but shouldn't." );
+        foreach ($invalid as $format) {
+            $isValid = $validator->validateVatNumberFormat($format);
+            self::assertFalse($isValid, "{$format} passed validation, but shouldn't.");
         }
     }
 
@@ -171,9 +172,4 @@ class ValidatorTest extends TestCase
             ['nl'],
         ];
     }
-
-
-
-
-
 }

@@ -13,7 +13,8 @@ use DateTimeInterface;
  * @package Ibericode\Vat
  * @internal
  */
-class Period {
+class Period
+{
     private $effectiveFrom;
     private $rates = [];
 

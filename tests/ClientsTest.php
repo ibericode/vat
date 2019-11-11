@@ -8,7 +8,8 @@ use Ibericode\Vat\Clients\Client;
 use Ibericode\Vat\Period;
 use PHPUnit\Framework\TestCase;
 
-class ClientsTest extends TestCase {
+class ClientsTest extends TestCase
+{
 
     /**
      * @group remote-http

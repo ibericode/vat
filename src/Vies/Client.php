@@ -6,7 +6,8 @@ namespace Ibericode\Vat\Vies;
 use SoapClient;
 use SoapFault;
 
-class Client {
+class Client
+{
 
     /**
      * @const string
@@ -25,10 +26,10 @@ class Client {
 
     /**
      * Client constructor.
-     * 
+     *
      * @param int $timeout How long should we wait before aborting the request to VIES?
      */
-    public function __construct(int $timeout = 10) 
+    public function __construct(int $timeout = 10)
     {
         $this->timeout = $timeout;
     }
@@ -41,7 +42,7 @@ class Client {
      *
      * @throws ViesException
      */
-    public function checkVat(string $countryCode, string $vatNumber) : bool 
+    public function checkVat(string $countryCode, string $vatNumber) : bool
     {
         try {
             $response = $this->getClient()->checkVat(
@@ -50,8 +51,8 @@ class Client {
                     'vatNumber' => $vatNumber
                 )
             );
-        } catch( SoapFault $e ) {
-            throw new ViesException( $e->getMessage(), $e->getCode() );
+        } catch (SoapFault $e) {
+            throw new ViesException($e->getMessage(), $e->getCode());
         }
 
         return (bool) $response->valid;

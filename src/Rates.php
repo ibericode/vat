@@ -11,7 +11,8 @@ use Ibericode\Vat\Clients\ClientException;
 use Ibericode\Vat\Clients\IbericodeVatRatesClient;
 use Ibericode\Vat\Clients\Client;
 
-class Rates {
+class Rates
+{
     const RATE_STANDARD = 'standard';
 
     private $rates = [];
@@ -84,7 +85,7 @@ class Rates {
         try {
             $this->client = $this->client ?: new IbericodeVatRatesClient();
             $this->rates = $this->client->fetch();
-        } catch(ClientException $e) {
+        } catch (ClientException $e) {
             // this property could have been populated from the local filesystem at this stage
             // this ensures the application using this package keeps on running even if the VAT rates service is down
             if (count($this->rates) > 0) {
@@ -150,5 +151,4 @@ class Rates {
         $activePeriod = $this->resolvePeriod($countryCode, $datetime);
         return $activePeriod->getRate($level);
     }
-
 }

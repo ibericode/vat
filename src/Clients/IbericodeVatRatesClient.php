@@ -27,11 +27,10 @@ class IbericodeVatRatesClient implements Client
         curl_close($ch);
 
         if ($body === '' || $status >= 400) {
-            throw new ClientException( "Error fetching rates from {$url}.");
+            throw new ClientException("Error fetching rates from {$url}.");
         }
 
         return $this->parseResponse($body);
-
     }
 
     private function parseResponse(string $response_body) : array
@@ -40,7 +39,6 @@ class IbericodeVatRatesClient implements Client
 
         $return = [];
         foreach ($result->items as $country => $periods) {
-
             foreach ($periods as $i => $period) {
                 $periods[$i] = new Period(new \DateTimeImmutable($period->effective_from), (array) $period->rates);
             }
@@ -50,5 +48,4 @@ class IbericodeVatRatesClient implements Client
 
         return $return;
     }
-
 }

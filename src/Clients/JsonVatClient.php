@@ -13,7 +13,7 @@ class JsonVatClient implements Client
      *
      * @return array
      */
-    public function fetch() : array 
+    public function fetch() : array
     {
         $url = 'https://jsonvat.com/';
 
@@ -28,11 +28,10 @@ class JsonVatClient implements Client
         curl_close($ch);
 
         if ($body === '' || $status >= 400) {
-            throw new ClientException( "Error fetching rates from {$url}.");
+            throw new ClientException("Error fetching rates from {$url}.");
         }
 
         return $this->parseResponse($body);
-
     }
 
     private function parseResponse(string $response_body) : array

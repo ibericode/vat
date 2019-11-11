@@ -66,8 +66,4 @@ class CountriesTest extends TestCase
         $this->assertFalse($countries->isCountryCodeInEU('US'));
         $this->assertTrue($countries->isCountryCodeInEU('NL'));
     }
-
-
-
 }
-
