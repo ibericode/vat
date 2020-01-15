@@ -93,6 +93,7 @@ class ValidatorTest extends TestCase
             'SI1234567',
             'SK123456789',
             'fooGB999999973', // valid VAT number but with string prefix
+            'ESB1234567C_invalid_suffix',
         ];
 
         foreach ($invalid as $format) {
