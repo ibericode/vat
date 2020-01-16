@@ -22,13 +22,13 @@ class Validator
         'DK' => '(\d{2} ?){3}\d{2}',
         'EE' => '\d{9}',
         'EL' => '\d{9}',
-        'ES' => '[A-Z]\d{7}[A-Z]|\d{8}[A-Z]|[A-Z]\d{8}',
+        'ES' => '([A-Z]\d{7}[A-Z]|\d{8}[A-Z]|[A-Z]\d{8})',
         'FI' => '\d{8}',
         'FR' => '[A-Z\d]{2}\d{9}',
-        'GB' => '\d{9}|\d{12}|(GD|HA)\d{3}',
+        'GB' => '(\d{9}|\d{12}|(GD|HA)\d{3})',
         'HR' => '\d{11}',
         'HU' => '\d{8}',
-        'IE' => '[A-Z\d]{8}|[A-Z\d]{9}',
+        'IE' => '([A-Z\d]{8}|[A-Z\d]{9})',
         'IT' => '\d{11}',
         'LT' => '(\d{9}|\d{12})',
         'LU' => '\d{8}',
@@ -106,8 +106,7 @@ class Validator
             return false;
         }
 
-        $matches = preg_match('/^' . $this->patterns[$country] . '$/', $number) > 0;
-        return $matches;
+        return preg_match('/^' . $this->patterns[$country] . '$/', $number) > 0;
     }
 
     /**
