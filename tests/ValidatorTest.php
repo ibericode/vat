@@ -9,8 +9,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * Class ValidatorTest
  * @package DvK\Tests\Vat
- *
- * Todo: Tests for validate method
  */
 class ValidatorTest extends TestCase
 {
@@ -92,8 +90,21 @@ class ValidatorTest extends TestCase
             'SE12345678901',
             'SI1234567',
             'SK123456789',
-            'fooGB999999973', // valid VAT number but with string prefix
+
+            // valid number but with prefix
+            'invalid_prefix_GB999999973',
+            'invalid_prefix_IE1234567X',
+            'invalid_prefix_ESB1234567C',
+            'invalid_prefix_BE0123456789',
+            'invalid_prefix_MT12345678',
+            'invalid_prefix_LT123456789',
+
+            // valid number but with suffix
+            'IE1234567X_invalid_suffix',
             'ESB1234567C_invalid_suffix',
+            'BE0123456789_invalid_suffix',
+            'MT12345678_invalid_suffix',
+            'LT123456789_invalid_suffix',
         ];
 
         foreach ($invalid as $format) {
