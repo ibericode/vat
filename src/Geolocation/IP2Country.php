@@ -21,7 +21,7 @@ class IP2Country
             return '';
         }
 
-        $url = sprintf('https://api.ip2country.info/ip?%s', urlencode($ipAddress));
+        $url = sprintf('https://api.ip2country.info/ip?%s', $ipAddress);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
