@@ -3,6 +3,7 @@
 namespace Ibericode\Vat\Tests;
 
 use Ibericode\Vat\Clients\ClientException;
+use Ibericode\Vat\Clients\IbericodeVatRatesClient;
 use Ibericode\Vat\Clients\JsonVatClient;
 use Ibericode\Vat\Exception;
 use Ibericode\Vat\Period;
@@ -19,10 +20,12 @@ class RatesTest extends TestCase
         }
     }
 
-    private function getJsonVatMock()
+    private function getRatesClientMock()
     {
-        $client = $this->getMockBuilder(JsonVatClient::class)->getMock();
+        $client = $this->getMockBuilder(IbericodeVatRatesClient::class)
+            ->getMock();
         $client
+            ->expects($this->once())
             ->method('fetch')
             ->willReturn([
                 'NL' => [
@@ -41,23 +44,19 @@ class RatesTest extends TestCase
                 ]
             ]);
 
-        $client
-            ->expects($this->once())
-            ->method('fetch');
-
         return $client;
     }
 
     public function testGetRateForCountry()
     {
-        $client = $this->getJsonVatMock();
+        $client = $this->getRatesClientMock();
         $rates = new Rates('vendor/rates', 30, $client);
         $this->assertEquals(21.0, $rates->getRateForCountry('NL'));
     }
 
     public function testGetRateForCountryOnDate()
     {
-        $client = $this->getJsonVatMock();
+        $client = $this->getRatesClientMock();
         $rates = new Rates('vendor/rates', 30, $client);
         $this->assertEquals(19.0, $rates->getRateForCountryOnDate('NL', new \DateTime('2011/01/01')));
         $this->assertEquals(6.0, $rates->getRateForCountryOnDate('NL', new \DateTime('2018/01/01'), 'reduced'));
@@ -68,7 +67,7 @@ class RatesTest extends TestCase
 
     public function testGetRateForCountryWithInvalidCountryCode()
     {
-        $client = $this->getJsonVatMock();
+        $client = $this->getRatesClientMock();
         $rates = new Rates('vendor/rates', 30, $client);
         $this->expectException(Exception::class);
         $rates->getRateForCountry('FOO');
@@ -76,7 +75,7 @@ class RatesTest extends TestCase
 
     public function testRatesAreLoadedFromFile()
     {
-        $client = $this->getJsonVatMock();
+        $client = $this->getRatesClientMock();
         $rates = new Rates('vendor/rates', 30, $client);
         $this->assertEquals(21.0, $rates->getRateForCountry('NL'));
 
@@ -95,12 +94,12 @@ class RatesTest extends TestCase
     public function testRatesAreLoadedFromFileOnClientException()
     {
         // first, populate local file
-        $client = $this->getJsonVatMock();
+        $client = $this->getRatesClientMock();
         $rates = new Rates('vendor/rates', 10, $client);
         $this->assertEquals(21.0, $rates->getRateForCountry('NL'));
 
         // then, perform test
-        $client = $this->getJsonVatMock();
+        $client = $this->getRatesClientMock();
         $client->method('fetch')->willThrowException(new ClientException('Service is down'));
         $rates = new Rates('vendor/rates', -1, $client);
         $this->assertEquals(21.0, $rates->getRateForCountry('NL'));

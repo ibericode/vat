@@ -26,7 +26,6 @@ class ClientsTest extends TestCase
 
     public function clientProvider()
     {
-        yield [new JsonVatClient()];
         yield [new IbericodeVatRatesClient()];
     }
 }
