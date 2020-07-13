@@ -2,8 +2,6 @@
 
 namespace Ibericode\Vat\Clients;
 
-use Ibericode\Vat\Exceptions\Exception;
-
 interface Client
 {
 
