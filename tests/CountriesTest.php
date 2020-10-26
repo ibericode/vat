@@ -12,20 +12,15 @@ class CountriesTest extends TestCase
     {
         $countries = new Countries();
 
-        $i = 0;
-        foreach ($countries as $code => $country) {
-            $i++;
-        }
-
-        $this->assertEquals(245, $i);
+        $this->assertCount(245, $countries);
     }
 
     public function testArrayAccess()
     {
         $countries = new Countries();
 
-        $this->assertEquals($countries['AF'], 'Afghanistan');
-        $this->assertEquals($countries['NL'], 'Netherlands');
+        $this->assertEquals('Afghanistan', $countries['AF']);
+        $this->assertEquals('Netherlands', $countries['NL']);
 
         $this->expectException(Exception::class);
         $countries['FOO'];

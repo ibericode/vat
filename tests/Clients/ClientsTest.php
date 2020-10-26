@@ -3,7 +3,6 @@
 namespace Ibericode\Vat\Tests\Clients;
 
 use Ibericode\Vat\Clients\IbericodeVatRatesClient;
-use Ibericode\Vat\Clients\JsonVatClient;
 use Ibericode\Vat\Clients\Client;
 use Ibericode\Vat\Period;
 use PHPUnit\Framework\TestCase;
