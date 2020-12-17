@@ -2,6 +2,7 @@
 
 namespace Ibericode\Vat\Tests;
 
+use DateTime;
 use Ibericode\Vat\Countries;
 use Ibericode\Vat\Exception;
 use PHPUnit\Framework\TestCase;
@@ -60,5 +61,14 @@ class CountriesTest extends TestCase
         $this->assertFalse($countries->isCountryCodeInEU('FOO'));
         $this->assertFalse($countries->isCountryCodeInEU('US'));
         $this->assertTrue($countries->isCountryCodeInEU('NL'));
+
+        // test for Brexit
+        $now = new DateTime('now');
+        $y2021 = new DateTime('2021-01-01 00:00:00');
+        if ($now > $y2021) {
+            $this->assertFalse($countries->isCountryCodeInEU('GB'));
+        } else {
+            $this->assertTrue($countries->isCountryCodeInEU('GB'));
+        }
     }
 }

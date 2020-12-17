@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Ibericode\Vat;
 
+use DateTime;
+
 /**
  * Class Countries
  *
@@ -279,7 +281,12 @@ class Countries implements \Iterator, \ArrayAccess
     public function isCountryCodeInEU(string $code) : bool
     {
         $eu = ['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GB', 'GR', 'HU', 'HR', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK'];
-        return in_array($code, $eu);
+
+        // Brexit transition period ends on Dec 31 23:59, so this method should return true only until then
+        if ((new DateTime('now')) < (new DateTime('2021-01-01 00:00:00'))) {
+            $eu[] = 'GB';
+        }
+        return in_array($code, $eu, true);
     }
 
 
