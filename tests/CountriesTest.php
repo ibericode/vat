@@ -64,7 +64,7 @@ class CountriesTest extends TestCase
 
         // test for Brexit
         $now = new DateTime('now');
-        $y2021 = new DateTime('2021-01-01 00:00:00');
+        $y2021 = new DateTime('2020-12-31 23:59:59');
         if ($now > $y2021) {
             $this->assertFalse($countries->isCountryCodeInEU('GB'));
         } else {
