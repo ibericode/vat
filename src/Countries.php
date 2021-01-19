@@ -258,6 +258,7 @@ class Countries implements \Iterator, \ArrayAccess
         'VI' => 'Virgin Islands, U.S.',
         'WF' => 'Wallis And Futuna',
         'EH' => 'Western Sahara',
+        'XI' => 'Northern Ireland',
         'YE' => 'Yemen',
         'ZM' => 'Zambia',
         'ZW' => 'Zimbabwe',
@@ -278,7 +279,7 @@ class Countries implements \Iterator, \ArrayAccess
      */
     public function isCountryCodeInEU(string $code) : bool
     {
-        $eu = ['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GB', 'GR', 'HU', 'HR', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK'];
+        $eu = ['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GR', 'HU', 'HR', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK', 'XI'];
         return in_array($code, $eu);
     }
 
