@@ -2,6 +2,7 @@
 
 namespace Ibericode\Vat\Tests;
 
+use DateTime;
 use Ibericode\Vat\Countries;
 use Ibericode\Vat\Exception;
 use PHPUnit\Framework\TestCase;
@@ -12,20 +13,15 @@ class CountriesTest extends TestCase
     {
         $countries = new Countries();
 
-        $i = 0;
-        foreach ($countries as $code => $country) {
-            $i++;
-        }
-
-        $this->assertEquals(245, $i);
+        $this->assertCount(245, $countries);
     }
 
     public function testArrayAccess()
     {
         $countries = new Countries();
 
-        $this->assertEquals($countries['AF'], 'Afghanistan');
-        $this->assertEquals($countries['NL'], 'Netherlands');
+        $this->assertEquals('Afghanistan', $countries['AF']);
+        $this->assertEquals('Netherlands', $countries['NL']);
 
         $this->expectException(Exception::class);
         $countries['FOO'];
@@ -65,5 +61,14 @@ class CountriesTest extends TestCase
         $this->assertFalse($countries->isCountryCodeInEU('FOO'));
         $this->assertFalse($countries->isCountryCodeInEU('US'));
         $this->assertTrue($countries->isCountryCodeInEU('NL'));
+
+        // test for Brexit
+        $now = new DateTime('now');
+        $y2021 = new DateTime('2020-12-31 23:59:59');
+        if ($now > $y2021) {
+            $this->assertFalse($countries->isCountryCodeInEU('GB'));
+        } else {
+            $this->assertTrue($countries->isCountryCodeInEU('GB'));
+        }
     }
 }

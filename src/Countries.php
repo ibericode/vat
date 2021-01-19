@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Ibericode\Vat;
 
+use DateTime;
+
 /**
  * Class Countries
  *

@@ -4,7 +4,6 @@ namespace Ibericode\Vat\Tests;
 
 use Ibericode\Vat\Clients\ClientException;
 use Ibericode\Vat\Clients\IbericodeVatRatesClient;
-use Ibericode\Vat\Clients\JsonVatClient;
 use Ibericode\Vat\Exception;
 use Ibericode\Vat\Period;
 use Ibericode\Vat\Rates;
@@ -13,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class RatesTest extends TestCase
 {
-    public function setUp() : void
+    protected function setUp() : void
     {
         if (file_exists('vendor/rates')) {
             unlink('vendor/rates');

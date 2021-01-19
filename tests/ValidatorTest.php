@@ -56,7 +56,7 @@ class ValidatorTest extends TestCase
 
         $validator = new Validator();
         foreach ($valid as $format) {
-            self::assertTrue($validator->validateVatNumberFormat($format), "{$format} did not pass validation.");
+            $this->assertTrue($validator->validateVatNumberFormat($format), "{$format} did not pass validation.");
         }
 
         $invalid = [
@@ -109,7 +109,7 @@ class ValidatorTest extends TestCase
 
         foreach ($invalid as $format) {
             $isValid = $validator->validateVatNumberFormat($format);
-            self::assertFalse($isValid, "{$format} passed validation, but shouldn't.");
+            $this->assertFalse($isValid, "{$format} passed validation, but shouldn't.");
         }
     }
 
