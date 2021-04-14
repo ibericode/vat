@@ -34,7 +34,7 @@ This library exposes 4 main classes to interact with: `Rates`, `Countries`, `Val
 #### Retrieving VAT rates.
 
 ```php
-$rates = new Ibericode\Rates\Rates('/path-for-storing-cache-file.txt');
+$rates = new Ibericode\Vat\Rates('/path-for-storing-cache-file.txt');
 $rates->getRateForCountry('NL'); // 21
 $rates->getRateForCountry('NL', 'standard'); // 21
 $rates->getRateForCountry('NL', 'reduced'); // 9
