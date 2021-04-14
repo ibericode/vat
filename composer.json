@@ -31,7 +31,6 @@
   "config": {
     "preferred-install": "dist"
   },
-  "prefer-stable": true,
   "suggest": {
     "ibericode/vat-bundle": "Symfony bundle for integrating this package",
     "ext-soap": "Needed to support VIES VAT number validation"
