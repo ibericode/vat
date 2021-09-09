@@ -12,7 +12,7 @@ class Client
     /**
      * @const string
      */
-    const URL = 'http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl';
+    const URL = 'https://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl';
 
     /**
      * @var SoapClient
