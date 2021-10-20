@@ -296,6 +296,7 @@ class Countries implements \Iterator, \ArrayAccess
      * @return mixed Can return any type.
      * @since 5.0.0
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return current($this->data);
@@ -307,6 +308,7 @@ class Countries implements \Iterator, \ArrayAccess
      * @return void Any returned value is ignored.
      * @since 5.0.0
      */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         next($this->data);
@@ -318,6 +320,7 @@ class Countries implements \Iterator, \ArrayAccess
      * @return mixed scalar on success, or null on failure.
      * @since 5.0.0
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return key($this->data);
@@ -330,6 +333,7 @@ class Countries implements \Iterator, \ArrayAccess
      * Returns true on success or false on failure.
      * @since 5.0.0
      */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return key($this->data) !== null;
@@ -341,6 +345,7 @@ class Countries implements \Iterator, \ArrayAccess
      * @return void Any returned value is ignored.
      * @since 5.0.0
      */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         reset($this->data);
@@ -350,6 +355,7 @@ class Countries implements \Iterator, \ArrayAccess
      * @param string $countryCode
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($countryCode)
     {
         return isset($this->data[$countryCode]);
@@ -360,6 +366,7 @@ class Countries implements \Iterator, \ArrayAccess
      * @return string
      * @throws \Exception
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($countryCode)
     {
         if (!$this->offsetExists($countryCode)) {
@@ -375,6 +382,7 @@ class Countries implements \Iterator, \ArrayAccess
      * @return string
      * @throws \Exception
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($countryCode, $name)
     {
         throw new Exception('Invalid use of Countries class');
@@ -385,6 +393,7 @@ class Countries implements \Iterator, \ArrayAccess
      * @return string
      * @throws \Exception
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($countryCode)
     {
         throw new Exception('Invalid use of Countries class');
