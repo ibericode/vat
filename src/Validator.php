@@ -10,7 +10,7 @@ class Validator
      * Regular expression patterns per country code
      *
      * @var array
-     * @link http://ec.europa.eu/taxation_customs/vies/faq.html?locale=lt#item_11
+     * @link https://ec.europa.eu/taxation_customs/vies/faq.html?locale=lt#item_11
      */
     private $patterns = [
         'AT' => 'U[A-Z\d]{8}',
