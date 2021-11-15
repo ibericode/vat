@@ -86,7 +86,7 @@ class RatesTest extends TestCase
         // test by invalidating file and testing for exception
         file_put_contents('vendor/rates', 'foobar');
         $rates = new Rates('vendor/rates', 30, $client);
-        $this->expectException(Error::class);
+        $this->expectError(Error::class);
         $this->assertEquals(21.0, $rates->getRateForCountry('NL'));
     }
 
