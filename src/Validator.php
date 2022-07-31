@@ -108,7 +108,55 @@ class Validator
 
         return preg_match('/^' . $this->patterns[$country] . '$/', $number) > 0;
     }
+    
 
+    /**
+     * Validate a Weighted VAT number format.
+     * This does not check whether the VAT number was really issued.
+     * Checks checksum in Weighted system
+     * Checksum code from https://romek.info/ut/nip-rego.html
+     *
+     * @param string $vatNumber
+     *
+     * @return boolean
+     */
+    public function validateWeightedVatNumberFormat(string $vatNumber)
+    {
+        $weightPatternByCountry = [
+            'PL' => "657234567"
+        ];
+
+        if ($vatNumber === '') {
+            return false;
+        }
+
+        $vatNumber = strtoupper($vatNumber);
+        $country = substr($vatNumber, 0, 2);
+        $number = substr($vatNumber, 2);
+
+        if (!isset($this->patterns[$country])) {
+            return false;
+        }
+
+        if (isset($weightPatternByCountry[$country])) {
+
+            $vatNumberWithoutDashes = preg_replace("/-/", "", $number); // Prevention of errors due to the historical record format
+
+            if (preg_match('/^' . $this->patterns[$country] . '$/', $vatNumberWithoutDashes) > 0) {
+                $checksum = 0;
+                for ($i = 0; $i < 9; ++$i) {
+                    $checksum += intval($vatNumberWithoutDashes[$i]) * intval(substr($weightPatternByCountry[$country], $i, 1));
+                }
+                return ($checksum % 11 == $vatNumberWithoutDashes[9]);
+            } else {
+                return false;
+            }
+        } else {
+
+            return preg_match('/^' . $this->patterns[$country] . '$/', $number) > 0;
+        }
+    }
+    
     /**
      *
      * @param string $vatNumber
