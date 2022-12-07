@@ -1,10 +1,6 @@
 name: Build
 
-on:
-  pull_request:
-    branches:
-  push:
-    branches:
+on: [ push, pull_request ]
 
 jobs:
   coding-standards:
@@ -40,15 +36,9 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "7.3"
           - "7.4"
           - "8.0"
           - "8.1"
-        dependencies:
-          - "highest"
-        include:
-          - dependencies: "lowest"
-            php-version: "7.3"
 
     steps:
       - name: "Checkout"
@@ -57,14 +47,10 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          coverage: "none"
           php-version: "${{ matrix.php-version }}"
-          tools: "cs2pr"
 
       - name: "Install dependencies with Composer"
         uses: "ramsey/composer-install@v1"
-        with:
-          dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Run PHPUnit"
         run: "vendor/bin/phpunit"
