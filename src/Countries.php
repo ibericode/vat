@@ -275,10 +275,9 @@ class Countries implements \Iterator, \ArrayAccess
     }
 
     /**
-     * @param string $code
-     * @return bool
+     * @return array
      */
-    public function isCountryCodeInEU(string $code) : bool
+    public function getCountryCodesInEU() : array
     {
         $eu = ['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GR', 'HU', 'HR', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK'];
 
@@ -286,7 +285,17 @@ class Countries implements \Iterator, \ArrayAccess
         if ((new DateTime('now')) < (new DateTime('2021-01-01 00:00:00'))) {
             $eu[] = 'GB';
         }
-        return in_array($code, $eu, true);
+
+        return $eu;
+    }
+
+    /**
+     * @param string $code
+     * @return bool
+     */
+    public function isCountryCodeInEU(string $code) : bool
+    {
+        return in_array($code, $this->getCountryCodesInEU(), true);
     }
 
 
