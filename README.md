@@ -1,7 +1,7 @@
 ibericode/vat
 ================
 
-[![Build Status](https://img.shields.io/travis/ibericode/vat.svg)](https://travis-ci.org/ibericode/vat)
+[![Build Status](https://github.com/ibericode/vat/actions/workflows/build.yml/badge.svg)](https://github.com/ibericode/vat/actions/workflows/build.yml)
 [![Latest Stable Version](https://img.shields.io/packagist/v/ibericode/vat.svg)](https://packagist.org/packages/ibericode/vat)
 ![PHP from Packagist](https://img.shields.io/packagist/php-v/ibericode/vat.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/dannyvankooten/vat.php.svg)](https://packagist.org/packages/ibericode/vat)
@@ -108,7 +108,7 @@ $geolocator->locateIpAddress('8.8.8.8'); // US
 
 #### Symfony support
 
-If you need to use this package in a Symfony environment, check out [ibericode/vat-bundle](https://github.com/ibericode/vat-bundle).
+If you need to use this package in a [Symfony](https://symfony.com/) environment, check out [ibericode/vat-bundle](https://github.com/ibericode/vat-bundle).
 
 ## License
 
