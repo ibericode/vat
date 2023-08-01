@@ -74,6 +74,7 @@ class Countries implements \Iterator, \ArrayAccess
         'CI' => 'Cote D\'Ivoire',
         'HR' => 'Croatia',
         'CU' => 'Cuba',
+        'CW' => 'Curaçao',
         'CY' => 'Cyprus',
         'CZ' => 'Czech Republic',
         'DK' => 'Denmark',
