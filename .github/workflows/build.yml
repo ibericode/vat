@@ -51,6 +51,7 @@ jobs:
 
       - name: "Install dependencies with Composer"
         uses: "ramsey/composer-install@v2"  
+        
       - name: "Run PHPUnit"
         run: "vendor/bin/phpunit"
 
