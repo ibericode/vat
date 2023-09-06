@@ -86,20 +86,14 @@ $countries->isCountryCodeInEU('US'); // false
 ```
 
 #### Geo-location
-This library includes a simple geo-location service using [ip2c.org](https://about.ip2c.org/) or [ip2country.info](https://ip2country.info).
+This library includes a simple geo-location service using [ip2c.org](https://about.ip2c.org/) or [ip2country.info](https://ip2country.info) (deprecated as of Dec 2022).
 
 ```php
 $geolocator = new Ibericode\Vat\Geolocator();
 $geolocator->locateIpAddress('8.8.8.8'); // US
 ```
 
-To use ip2country.info explicitly.
-```php
-$geolocator = new Ibericode\Vat\Geolocator('ip2country.info');
-$geolocator->locateIpAddress('8.8.8.8'); // US
-```
-
-Or, to use ip2c.org explicitly.
+To use ip2c.org explicitly.
 
 ```php
 $geolocator = new Ibericode\Vat\Geolocator('ip2c.org');
