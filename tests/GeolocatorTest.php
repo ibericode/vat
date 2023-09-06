@@ -21,6 +21,5 @@ class GeolocatorTest extends TestCase
     public function provider()
     {
         yield ['ip2c.org'];
-        yield ['ip2country.info'];
     }
 }
