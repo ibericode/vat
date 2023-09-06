@@ -33,6 +33,8 @@ This library exposes 4 main classes to interact with: `Rates`, `Countries`, `Val
 
 #### Retrieving VAT rates.
 
+> This package relies on a [community maintained repository of vat rates](https://github.com/ibericode/vat-rates). We invite you to toggle notifications for that repository and contribute changes to VAT rates in your country once they are announced.
+
 ```php
 $rates = new Ibericode\Vat\Rates('/path-for-storing-cache-file.txt');
 $rates->getRateForCountry('NL'); // 21
