@@ -9,7 +9,7 @@ namespace Ibericode\Vat\Geolocation;
  *
  * @package Ibericode\Vat\Geolocation
  */
-class IP2C
+class IP2C implements GeolocatorInterface
 {
 
     /**

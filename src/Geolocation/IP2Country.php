@@ -9,7 +9,7 @@ namespace Ibericode\Vat\Geolocation;
  *
  * @package Ibericode\Vat\Geolocation
  */
-class IP2Country
+class IP2Country implements GeolocatorInterface
 {
     /**
      * @param string $ipAddress
