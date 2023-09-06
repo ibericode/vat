@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "7.4"
+          - "8.2"
 
     steps:
       - name: "Checkout"
@@ -24,7 +24,7 @@ jobs:
           tools: "cs2pr"
 
       - name: "Install dependencies with Composer"
-        uses: "ramsey/composer-install@v1"
+        uses: "ramsey/composer-install@v2"
 
       - name: "Run PHP_CodeSniffer"
         run: "vendor/bin/phpcs -n -s --report=checkstyle | cs2pr"
@@ -36,9 +36,9 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "7.4"
           - "8.0"
           - "8.1"
+          - "8.2"
 
     steps:
       - name: "Checkout"
@@ -50,8 +50,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
 
       - name: "Install dependencies with Composer"
-        uses: "ramsey/composer-install@v1"
-
+        uses: "ramsey/composer-install@v2"  
       - name: "Run PHPUnit"
         run: "vendor/bin/phpunit"
 
