@@ -75,9 +75,11 @@ class Rates
             ]
         ]);
 
-        if (is_array($data)) {
-            $this->rates = $data;
+        if (false === is_array($data)) {
+            throw new Exception("Unserializable file content");
         }
+
+        $this->rates = $data;
     }
 
     private function loadFromRemote()
