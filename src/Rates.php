@@ -13,7 +13,7 @@ use Ibericode\Vat\Clients\Client;
 
 class Rates
 {
-    const RATE_STANDARD = 'standard';
+    public const RATE_STANDARD = 'standard';
 
     private $rates = [];
 
