@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ibericode\Vat;
@@ -6,7 +7,6 @@ namespace Ibericode\Vat;
 use DateTime;
 use DateTimeInterface;
 use DateTimeImmutable;
-
 use Ibericode\Vat\Clients\ClientException;
 use Ibericode\Vat\Clients\IbericodeVatRatesClient;
 use Ibericode\Vat\Clients\Client;
@@ -110,7 +110,7 @@ class Rates
         }
     }
 
-    private function resolvePeriod(string $countryCode, DateTimeInterface $datetime) : Period
+    private function resolvePeriod(string $countryCode, DateTimeInterface $datetime): Period
     {
         $this->load();
 
@@ -135,7 +135,7 @@ class Rates
      * @return float
      * @throws \Exception
      */
-    public function getRateForCountry(string $countryCode, string $level = self::RATE_STANDARD) : float
+    public function getRateForCountry(string $countryCode, string $level = self::RATE_STANDARD): float
     {
         $todayMidnight = new \DateTimeImmutable('today midnight');
         return $this->getRateForCountryOnDate($countryCode, $todayMidnight, $level);
@@ -148,7 +148,7 @@ class Rates
      * @return float
      * @throws Exception
      */
-    public function getRateForCountryOnDate(string $countryCode, \DateTimeInterface $datetime, string $level = self::RATE_STANDARD) : float
+    public function getRateForCountryOnDate(string $countryCode, \DateTimeInterface $datetime, string $level = self::RATE_STANDARD): float
     {
         $activePeriod = $this->resolvePeriod($countryCode, $datetime);
         return $activePeriod->getRate($level);

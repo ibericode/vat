@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class RatesTest extends TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         if (file_exists('vendor/rates')) {
             unlink('vendor/rates');

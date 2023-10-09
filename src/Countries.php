@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ibericode\Vat;
@@ -274,7 +275,7 @@ class Countries implements \Iterator, \ArrayAccess
      * @param string $code
      * @return bool
      */
-    public function hasCountryCode(string $code) : bool
+    public function hasCountryCode(string $code): bool
     {
         return $this->offsetExists($code);
     }
@@ -282,7 +283,7 @@ class Countries implements \Iterator, \ArrayAccess
     /**
      * @return array
      */
-    public function getCountryCodesInEU() : array
+    public function getCountryCodesInEU(): array
     {
         return ['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GR', 'HU', 'HR', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK'];
     }
@@ -291,7 +292,7 @@ class Countries implements \Iterator, \ArrayAccess
      * @param string $code
      * @return bool
      */
-    public function isCountryCodeInEU(string $code) : bool
+    public function isCountryCodeInEU(string $code): bool
     {
         return in_array($code, $this->getCountryCodesInEU(), true);
     }

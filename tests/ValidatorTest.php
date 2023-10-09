@@ -3,7 +3,6 @@
 namespace Ibericode\Vat\Tests;
 
 use Ibericode\Vat\Validator;
-
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -12,7 +11,6 @@ use PHPUnit\Framework\TestCase;
  */
 class ValidatorTest extends TestCase
 {
-
     /**
      * @covers Validator::validateVatNumberFormat
      */
