@@ -19,6 +19,7 @@ class ValidatorTest extends TestCase
         $valid = [
             'ATU12345678',
             'BE0123456789',
+            'BE0234567891',
             'BE1234567891',
             'BG123456789',
             'BG1234567890',
@@ -62,6 +63,7 @@ class ValidatorTest extends TestCase
             'ATU1234567',
             'BE012345678',
             'BE123456789',
+            'BE2234567891',
             'BG1234567',
             'CY1234567X',
             'CZ1234567',
