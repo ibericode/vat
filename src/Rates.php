@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ibericode\Vat;
 
-use DateTime;
 use DateTimeInterface;
 use DateTimeImmutable;
 use Ibericode\Vat\Clients\ClientException;
@@ -46,13 +45,13 @@ class Rates
         $this->client = $client;
     }
 
-    private function load()
+    private function load(): void
     {
         if (count($this->rates) > 0) {
             return;
         }
 
-        if ($this->storagePath !== '' && file_exists($this->storagePath)) {
+        if ($this->storagePath !== '' && \is_file($this->storagePath)) {
             $this->loadFromFile();
 
             // bail early if file is still valid
@@ -65,7 +64,7 @@ class Rates
         $this->loadFromRemote();
     }
 
-    private function loadFromFile()
+    private function loadFromFile(): void
     {
         $contents = file_get_contents($this->storagePath);
         $data = unserialize($contents, [
@@ -82,7 +81,7 @@ class Rates
         $this->rates = $data;
     }
 
-    private function loadFromRemote()
+    private function loadFromRemote(): void
     {
         try {
             $this->client = $this->client ?: new IbericodeVatRatesClient();
