@@ -26,7 +26,7 @@ class Period
         $this->exceptions = $exceptions;
     }
 
-    public function getEffectiveFrom() : DateTimeInterface
+    public function getEffectiveFrom(): DateTimeInterface
     {
         return $this->effectiveFrom;
     }

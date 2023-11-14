@@ -15,7 +15,7 @@ class IP2Country implements GeolocatorInterface
      * @param string $ipAddress
      * @return string
      */
-    public function locateIpAddress(string $ipAddress) : string
+    public function locateIpAddress(string $ipAddress): string
     {
         if ($ipAddress === '') {
             return '';

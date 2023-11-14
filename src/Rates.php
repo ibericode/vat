@@ -1,19 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ibericode\Vat;
 
-use DateTime;
 use DateTimeInterface;
 use DateTimeImmutable;
-
 use Ibericode\Vat\Clients\ClientException;
 use Ibericode\Vat\Clients\IbericodeVatRatesClient;
 use Ibericode\Vat\Clients\Client;
 
 class Rates
 {
-    const RATE_STANDARD = 'standard';
+    public const RATE_STANDARD = 'standard';
 
     private $rates = [];
 
@@ -46,13 +45,13 @@ class Rates
         $this->client = $client;
     }
 
-    private function load()
+    private function load(): void
     {
         if (count($this->rates) > 0) {
             return;
         }
 
-        if ($this->storagePath !== '' && file_exists($this->storagePath)) {
+        if ($this->storagePath !== '' && \is_file($this->storagePath)) {
             $this->loadFromFile();
 
             // bail early if file is still valid
@@ -65,7 +64,7 @@ class Rates
         $this->loadFromRemote();
     }
 
-    private function loadFromFile()
+    private function loadFromFile(): void
     {
         $contents = file_get_contents($this->storagePath);
 
@@ -83,7 +82,7 @@ class Rates
         $this->rates = $data;
     }
 
-    private function loadFromRemote()
+    private function loadFromRemote(): void
     {
         try {
             $this->client = $this->client ?: new IbericodeVatRatesClient();
@@ -111,7 +110,7 @@ class Rates
         }
     }
 
-    private function resolvePeriod(string $countryCode, DateTimeInterface $datetime) : Period
+    private function resolvePeriod(string $countryCode, DateTimeInterface $datetime): Period
     {
         $this->load();
 
@@ -133,6 +132,7 @@ class Rates
     /**
      * @param string $countryCode ISO-3166-1-alpha2 country code
      * @param string $level
+     * @param ?string $postcode
      * @return float
      * @throws \Exception
      */
@@ -146,6 +146,7 @@ class Rates
      * @param string $countryCode ISO-3166-1-alpha2 country code
      * @param DateTimeInterface $datetime
      * @param string $level
+     * @param ?string $postcode
      * @return float
      * @throws Exception
      */

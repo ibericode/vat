@@ -28,7 +28,7 @@ class Geolocator
         $this->service = new $this->services[$service]();
     }
 
-    public function locateIpAddress(string $ipAddress) : string
+    public function locateIpAddress(string $ipAddress): string
     {
         if ($ipAddress === '') {
             return '';

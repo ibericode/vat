@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ibericode\Vat;
 
 class Validator
 {
-
     /**
      * Regular expression patterns per country code
      *
@@ -14,7 +14,7 @@ class Validator
      */
     private $patterns = [
         'AT' => 'U[A-Z\d]{8}',
-        'BE' => '(0\d{9}|\d{10})',
+        'BE' => '(0|1)\d{9}',
         'BG' => '\d{9,10}',
         'CY' => '\d{8}[A-Z]',
         'CZ' => '\d{8,10}',
@@ -67,7 +67,7 @@ class Validator
      * @param string $countryCode
      * @return bool
      */
-    public function validateCountryCode(string $countryCode) : bool
+    public function validateCountryCode(string $countryCode): bool
     {
         $countries = new Countries();
         return isset($countries[$countryCode]);
@@ -79,7 +79,7 @@ class Validator
      * @param string $ipAddress
      * @return bool
      */
-    public function validateIpAddress(string $ipAddress) : bool
+    public function validateIpAddress(string $ipAddress): bool
     {
         if ($ipAddress === '') {
             return false;
@@ -95,7 +95,7 @@ class Validator
      *
      * @return boolean
      */
-    public function validateVatNumberFormat(string $vatNumber) : bool
+    public function validateVatNumberFormat(string $vatNumber): bool
     {
         if ($vatNumber === '') {
             return false;
@@ -120,7 +120,7 @@ class Validator
      *
      * @throws Vies\ViesException
      */
-    protected function validateVatNumberExistence(string $vatNumber) : bool
+    protected function validateVatNumberExistence(string $vatNumber): bool
     {
         $vatNumber = strtoupper($vatNumber);
         $country = substr($vatNumber, 0, 2);
@@ -137,7 +137,7 @@ class Validator
      *
      * @throws Vies\ViesException
      */
-    public function validateVatNumber(string $vatNumber) : bool
+    public function validateVatNumber(string $vatNumber): bool
     {
         return $this->validateVatNumberFormat($vatNumber) && $this->validateVatNumberExistence($vatNumber);
     }

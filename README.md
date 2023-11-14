@@ -7,7 +7,7 @@ ibericode/vat
 [![Total Downloads](https://img.shields.io/packagist/dt/dannyvankooten/vat.php.svg)](https://packagist.org/packages/ibericode/vat)
 ![License](https://img.shields.io/github/license/ibericode/vat.svg)
 
-This is a simple PHP library to help you deal with Europe's VAT rules. 
+This is a simple PHP library to help you deal with Europe's VAT rules.
 
 - Fetch VAT rates for any EU member state using [ibericode/vat-rates](https://github.com/ibericode/vat-rates).
 - Validate VAT numbers (by format and/or [existence](http://ec.europa.eu/taxation_customs/vies/))
@@ -17,7 +17,7 @@ This is a simple PHP library to help you deal with Europe's VAT rules.
 
 ## Installation
 
-[PHP](https://php.net) version 7.1 or higher with the CURL and JSON extension is required. 
+[PHP](https://php.net) version 7.3 or higher with the CURL and JSON extension is required.
 
 For VAT number existence checking, the PHP SOAP extension is required as well.
 

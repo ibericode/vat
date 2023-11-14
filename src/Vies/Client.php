@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ibericode\Vat\Vies;
@@ -8,11 +9,10 @@ use SoapFault;
 
 class Client
 {
-
     /**
      * @const string
      */
-    const URL = 'https://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl';
+    private const URL = 'https://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl';
 
     /**
      * @var SoapClient
@@ -42,7 +42,7 @@ class Client
      *
      * @throws ViesException
      */
-    public function checkVat(string $countryCode, string $vatNumber) : bool
+    public function checkVat(string $countryCode, string $vatNumber): bool
     {
         try {
             $response = $this->getClient()->checkVat(
@@ -61,7 +61,7 @@ class Client
     /**
      * @return SoapClient
      */
-    protected function getClient() : SoapClient
+    protected function getClient(): SoapClient
     {
         if ($this->client === null) {
             $this->client = new SoapClient(self::URL, ['connection_timeout' => $this->timeout]);
