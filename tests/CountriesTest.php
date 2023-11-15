@@ -13,7 +13,7 @@ class CountriesTest extends TestCase
     {
         $countries = new Countries();
 
-        $this->assertCount(249, $countries);
+        $this->assertCount(250, $countries);
     }
 
     public function testArrayAccess()

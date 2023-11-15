@@ -36,12 +36,13 @@ class IbericodeVatRatesClient implements Client
 
     private function parseResponse(string $response_body): array
     {
-        $result = json_decode($response_body, false);
+        $result = json_decode($response_body, true);
+
 
         $return = [];
-        foreach ($result->items as $country => $periods) {
+        foreach ($result['items'] as $country => $periods) {
             foreach ($periods as $i => $period) {
-                $periods[$i] = new Period(new \DateTimeImmutable($period->effective_from), (array) $period->rates);
+                $periods[$i] = new Period(new \DateTimeImmutable($period['effective_from']), (array) $period['rates'],  $period['exceptions'] ?? []);
             }
 
             $return[$country] = $periods;

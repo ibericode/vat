@@ -67,6 +67,7 @@ class Rates
     private function loadFromFile(): void
     {
         $contents = file_get_contents($this->storagePath);
+
         $data = unserialize($contents, [
             'allowed_classes' => [
                 Period::class,
@@ -131,25 +132,27 @@ class Rates
     /**
      * @param string $countryCode ISO-3166-1-alpha2 country code
      * @param string $level
+     * @param ?string $postcode
      * @return float
      * @throws \Exception
      */
-    public function getRateForCountry(string $countryCode, string $level = self::RATE_STANDARD): float
+    public function getRateForCountry(string $countryCode, string $level = self::RATE_STANDARD, ?string $postcode = null) : float
     {
         $todayMidnight = new \DateTimeImmutable('today midnight');
-        return $this->getRateForCountryOnDate($countryCode, $todayMidnight, $level);
+        return $this->getRateForCountryOnDate($countryCode, $todayMidnight, $level, $postcode);
     }
 
     /**
      * @param string $countryCode ISO-3166-1-alpha2 country code
      * @param DateTimeInterface $datetime
      * @param string $level
+     * @param ?string $postcode
      * @return float
      * @throws Exception
      */
-    public function getRateForCountryOnDate(string $countryCode, \DateTimeInterface $datetime, string $level = self::RATE_STANDARD): float
+    public function getRateForCountryOnDate(string $countryCode, \DateTimeInterface $datetime, string $level = self::RATE_STANDARD, ?string $postcode = null) : float
     {
         $activePeriod = $this->resolvePeriod($countryCode, $datetime);
-        return $activePeriod->getRate($level);
+        return $activePeriod->getRate($level, $postcode);
     }
 }

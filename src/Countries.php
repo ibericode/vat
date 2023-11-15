@@ -262,7 +262,9 @@ class Countries implements \Iterator, \ArrayAccess
         'VI' => 'U.S. Virgin Islands',
         'VN' => 'Vietnam',
         'VU' => 'Vanuatu',
-        'WF' => 'Wallis & Futuna',
+        'WF' => 'Wallis And Futuna',
+        'EH' => 'Western Sahara',
+        'XI' => 'Northern Ireland',
         'WS' => 'Samoa',
         'YE' => 'Yemen',
         'YT' => 'Mayotte',
@@ -285,7 +287,7 @@ class Countries implements \Iterator, \ArrayAccess
      */
     public function getCountryCodesInEU(): array
     {
-        return ['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GR', 'HU', 'HR', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK'];
+        return ['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GR', 'HU', 'HR', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK', 'XI'];
     }
 
     /**
