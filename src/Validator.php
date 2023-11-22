@@ -87,14 +87,22 @@ class Validator
         return (bool) filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE);
     }
 
+    public function hasSupportedCountryPrefix(string $vatNumber): bool
+    {
+        $country = substr($vatNumber, 0, 2);
+
+        return isset($this->patterns[$country]);
+    }
+
     /**
      * Validate a VAT number format. This does not check whether the VAT number was really issued.
      *
      * @param string $vatNumber
+     * @param bool $skipIfUnsupported
      *
      * @return boolean
      */
-    public function validateVatNumberFormat(string $vatNumber): bool
+    public function validateVatNumberFormat(string $vatNumber, bool $skipIfUnsupported = false): bool
     {
         if ($vatNumber === '') {
             return false;
@@ -105,7 +113,7 @@ class Validator
         $number = substr($vatNumber, 2);
 
         if (! isset($this->patterns[$country])) {
-            return false;
+            return $skipIfUnsupported;
         }
 
         return preg_match('/^' . $this->patterns[$country] . '$/', $number) > 0;
