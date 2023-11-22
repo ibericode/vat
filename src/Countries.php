@@ -285,7 +285,41 @@ class Countries implements \Iterator, \ArrayAccess
      */
     public function getCountryCodesInEU(): array
     {
-        return ['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GR', 'HU', 'HR', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK'];
+        return [
+            'AT', // Austria
+            'AX', // Aland islands => Finland
+            'BE', // Belgium
+            'BG', // Bulgaria
+            'CY', // Cyprus
+            'CZ', // Czechia
+            'DE', // Germany
+            'DK', // Denmark
+            'EE', // Estonia
+            'ES', // Spain
+            'FI', // Finland
+            'FR', // France
+            'GF', // French guiana => France
+            'GP', // Guadeloupe => France
+            'GR', // Greece
+            'HU', // Hungary
+            'HR', // Croatia
+            'IE', // Ireland
+            'IT', // Italy
+            'LT', // Lithuania
+            'LU', // Luxembourg
+            'LV', // Latvia
+            'MT', // Malta
+            'MQ', // Martinique => France
+            'NL', // Netherlands
+            'PL', // Poland
+            'PT', // Portugal
+            'RE', // Reunion => France
+            'RO', // Romania
+            'SE', // Sweden
+            'SI', // Slovenia
+            'SK', // Slovakia
+            'YT', // Mayotte => France
+        ];
     }
 
     /**
