@@ -67,6 +67,10 @@ class Rates
     private function loadFromFile(): void
     {
         $contents = file_get_contents($this->storagePath);
+        if ($contents === false || $contents === '') {
+            throw new Exception("Unserializable file content");
+        }
+
         $data = unserialize($contents, [
             'allowed_classes' => [
                 Period::class,
