@@ -17,7 +17,7 @@ This is a simple PHP library to help you deal with Europe's VAT rules.
 
 ## Installation
 
-[PHP](https://php.net) version 7.3 or higher with the CURL and JSON extension is required.
+[PHP](https://php.net) version 8.1 or higher with the CURL and JSON extension is required.
 
 For VAT number existence checking, the PHP SOAP extension is required as well.
 
