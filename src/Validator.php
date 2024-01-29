@@ -98,11 +98,10 @@ class Validator
      * Validate a VAT number format. This does not check whether the VAT number was really issued.
      *
      * @param string $vatNumber
-     * @param bool $skipIfUnsupported
      *
      * @return boolean
      */
-    public function validateVatNumberFormat(string $vatNumber, bool $skipIfUnsupported = false): bool
+    public function validateVatNumberFormat(string $vatNumber): bool
     {
         if ($vatNumber === '') {
             return false;
@@ -113,7 +112,7 @@ class Validator
         $number = substr($vatNumber, 2);
 
         if (! isset($this->patterns[$country])) {
-            return $skipIfUnsupported;
+            throw new \InvalidArgumentException('The vat country prefix is not supported.');
         }
 
         return preg_match('/^' . $this->patterns[$country] . '$/', $number) > 0;

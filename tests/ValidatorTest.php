@@ -96,14 +96,6 @@ class ValidatorTest extends TestCase
             'SI1234567',
             'SK123456789',
 
-            // valid number but with prefix
-            'invalid_prefix_GB999999973',
-            'invalid_prefix_IE1234567X',
-            'invalid_prefix_ESB1234567C',
-            'invalid_prefix_BE0123456789',
-            'invalid_prefix_MT12345678',
-            'invalid_prefix_LT123456789',
-
             // valid number but with suffix
             'IE1234567X_invalid_suffix',
             'ESB1234567C_invalid_suffix',
