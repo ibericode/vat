@@ -4,7 +4,6 @@ namespace Ibericode\Vat\Clients;
 
 interface Client
 {
-
     /**
      * This method should return an associative array in the following format:
      *
@@ -18,5 +17,5 @@ interface Client
      * @return array
      * @throws ClientException
      */
-    public function fetch() : array;
+    public function fetch(): array;
 }

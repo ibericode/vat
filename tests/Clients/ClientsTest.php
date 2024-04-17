@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 class ClientsTest extends TestCase
 {
-
     /**
      * @group remote-http
      * @dataProvider clientProvider

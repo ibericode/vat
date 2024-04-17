@@ -1,19 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ibericode\Vat;
 
-use DateTime;
 use DateTimeInterface;
 use DateTimeImmutable;
-
 use Ibericode\Vat\Clients\ClientException;
 use Ibericode\Vat\Clients\IbericodeVatRatesClient;
 use Ibericode\Vat\Clients\Client;
 
 class Rates
 {
-    const RATE_STANDARD = 'standard';
+    public const RATE_STANDARD = 'standard';
 
     private $rates = [];
 
@@ -46,13 +45,13 @@ class Rates
         $this->client = $client;
     }
 
-    private function load()
+    private function load(): void
     {
         if (count($this->rates) > 0) {
             return;
         }
 
-        if ($this->storagePath !== '' && file_exists($this->storagePath)) {
+        if ($this->storagePath !== '' && \is_file($this->storagePath)) {
             $this->loadFromFile();
 
             // bail early if file is still valid
@@ -65,9 +64,13 @@ class Rates
         $this->loadFromRemote();
     }
 
-    private function loadFromFile()
+    private function loadFromFile(): void
     {
         $contents = file_get_contents($this->storagePath);
+        if ($contents === false || $contents === '') {
+            throw new Exception("Unserializable file content");
+        }
+
         $data = unserialize($contents, [
             'allowed_classes' => [
                 Period::class,
@@ -75,12 +78,14 @@ class Rates
             ]
         ]);
 
-        if (is_array($data)) {
-            $this->rates = $data;
+        if (false === is_array($data)) {
+            throw new Exception("Unserializable file content");
         }
+
+        $this->rates = $data;
     }
 
-    private function loadFromRemote()
+    private function loadFromRemote(): void
     {
         try {
             $this->client = $this->client ?: new IbericodeVatRatesClient();
@@ -108,7 +113,7 @@ class Rates
         }
     }
 
-    private function resolvePeriod(string $countryCode, DateTimeInterface $datetime) : Period
+    private function resolvePeriod(string $countryCode, DateTimeInterface $datetime): Period
     {
         $this->load();
 
@@ -133,7 +138,7 @@ class Rates
      * @return float
      * @throws \Exception
      */
-    public function getRateForCountry(string $countryCode, string $level = self::RATE_STANDARD) : float
+    public function getRateForCountry(string $countryCode, string $level = self::RATE_STANDARD): float
     {
         $todayMidnight = new \DateTimeImmutable('today midnight');
         return $this->getRateForCountryOnDate($countryCode, $todayMidnight, $level);
@@ -146,7 +151,7 @@ class Rates
      * @return float
      * @throws Exception
      */
-    public function getRateForCountryOnDate(string $countryCode, \DateTimeInterface $datetime, string $level = self::RATE_STANDARD) : float
+    public function getRateForCountryOnDate(string $countryCode, \DateTimeInterface $datetime, string $level = self::RATE_STANDARD): float
     {
         $activePeriod = $this->resolvePeriod($countryCode, $datetime);
         return $activePeriod->getRate($level);

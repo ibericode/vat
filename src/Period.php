@@ -24,12 +24,12 @@ class Period
         $this->rates = $rates;
     }
 
-    public function getEffectiveFrom() : DateTimeInterface
+    public function getEffectiveFrom(): DateTimeInterface
     {
         return $this->effectiveFrom;
     }
 
-    public function getRate(string $level) : float
+    public function getRate(string $level): float
     {
         if (!isset($this->rates[$level])) {
             throw new InvalidArgumentException("Invalid rate level: {$level}");

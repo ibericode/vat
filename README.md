@@ -1,13 +1,13 @@
 ibericode/vat
 ================
 
-[![Build Status](https://img.shields.io/travis/ibericode/vat.svg)](https://travis-ci.org/ibericode/vat)
+[![Build Status](https://github.com/ibericode/vat/actions/workflows/build.yml/badge.svg)](https://github.com/ibericode/vat/actions/workflows/build.yml)
 [![Latest Stable Version](https://img.shields.io/packagist/v/ibericode/vat.svg)](https://packagist.org/packages/ibericode/vat)
 ![PHP from Packagist](https://img.shields.io/packagist/php-v/ibericode/vat.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/dannyvankooten/vat.php.svg)](https://packagist.org/packages/ibericode/vat)
 ![License](https://img.shields.io/github/license/ibericode/vat.svg)
 
-This is a simple PHP library to help you deal with Europe's VAT rules. 
+This is a simple PHP library to help you deal with Europe's VAT rules.
 
 - Fetch VAT rates for any EU member state using [ibericode/vat-rates](https://github.com/ibericode/vat-rates).
 - Validate VAT numbers (by format and/or [existence](http://ec.europa.eu/taxation_customs/vies/))
@@ -17,7 +17,7 @@ This is a simple PHP library to help you deal with Europe's VAT rules.
 
 ## Installation
 
-[PHP](https://php.net) version 7.1 or higher with the CURL and JSON extension is required. 
+[PHP](https://php.net) version 8.1 or higher with the CURL and JSON extension is required.
 
 For VAT number existence checking, the PHP SOAP extension is required as well.
 
@@ -32,6 +32,8 @@ composer require ibericode/vat
 This library exposes 4 main classes to interact with: `Rates`, `Countries`, `Validator` and `Geolocator`.
 
 #### Retrieving VAT rates.
+
+> This package relies on a [community maintained repository of vat rates](https://github.com/ibericode/vat-rates). We invite you to toggle notifications for that repository and contribute changes to VAT rates in your country once they are announced.
 
 ```php
 $rates = new Ibericode\Vat\Rates('/path-for-storing-cache-file.txt');
@@ -86,20 +88,14 @@ $countries->isCountryCodeInEU('US'); // false
 ```
 
 #### Geo-location
-This library includes a simple geo-location service using [ip2c.org](https://about.ip2c.org/) or [ip2country.info](https://ip2country.info).
+This library includes a simple geo-location service using [ip2c.org](https://about.ip2c.org/) or [ip2country.info](https://ip2country.info) (deprecated as of Dec 2022).
 
 ```php
 $geolocator = new Ibericode\Vat\Geolocator();
 $geolocator->locateIpAddress('8.8.8.8'); // US
 ```
 
-To use ip2country.info explicitly.
-```php
-$geolocator = new Ibericode\Vat\Geolocator('ip2country.info');
-$geolocator->locateIpAddress('8.8.8.8'); // US
-```
-
-Or, to use ip2c.org explicitly.
+To use ip2c.org explicitly.
 
 ```php
 $geolocator = new Ibericode\Vat\Geolocator('ip2c.org');
@@ -108,7 +104,7 @@ $geolocator->locateIpAddress('8.8.8.8'); // US
 
 #### Symfony support
 
-If you need to use this package in a Symfony environment, check out [ibericode/vat-bundle](https://github.com/ibericode/vat-bundle).
+If you need to use this package in a [Symfony](https://symfony.com/) environment, check out [ibericode/vat-bundle](https://github.com/ibericode/vat-bundle).
 
 ## License
 

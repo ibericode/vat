@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ibericode\Vat\Clients;
@@ -12,7 +13,7 @@ class IbericodeVatRatesClient implements Client
      *
      * @return array
      */
-    public function fetch() : array
+    public function fetch(): array
     {
         $url = 'https://raw.githubusercontent.com/ibericode/vat-rates/master/vat-rates.json';
 
@@ -33,7 +34,7 @@ class IbericodeVatRatesClient implements Client
         return $this->parseResponse($body);
     }
 
-    private function parseResponse(string $response_body) : array
+    private function parseResponse(string $response_body): array
     {
         $result = json_decode($response_body, false);
 

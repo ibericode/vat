@@ -3,7 +3,6 @@
 namespace Ibericode\Vat\Tests;
 
 use Ibericode\Vat\Validator;
-
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -12,7 +11,6 @@ use PHPUnit\Framework\TestCase;
  */
 class ValidatorTest extends TestCase
 {
-
     /**
      * @covers Validator::validateVatNumberFormat
      */
@@ -21,6 +19,7 @@ class ValidatorTest extends TestCase
         $valid = [
             'ATU12345678',
             'BE0123456789',
+            'BE0234567891',
             'BE1234567891',
             'BG123456789',
             'BG1234567890',
@@ -40,6 +39,8 @@ class ValidatorTest extends TestCase
             'HU12345678',
             'HR12345678901',
             'IE1234567X',
+            'IE1X34567X',
+            'IE1234567XX',
             'IT12345678901',
             'LT123456789',
             'LU12345678',
@@ -64,6 +65,7 @@ class ValidatorTest extends TestCase
             'ATU1234567',
             'BE012345678',
             'BE123456789',
+            'BE2234567891',
             'BG1234567',
             'CY1234567X',
             'CZ1234567',
@@ -78,6 +80,9 @@ class ValidatorTest extends TestCase
             'HU1234567',
             'HR1234567890',
             'IE123456X',
+            'IE1X34567XX',
+            'IE12345678X',
+            'IE123456789',
             'IT1234567890',
             'LT12345678',
             'LU1234567',

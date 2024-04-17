@@ -1,20 +1,20 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ibericode\Vat;
 
 class Validator
 {
-
     /**
      * Regular expression patterns per country code
      *
      * @var array
-     * @link http://ec.europa.eu/taxation_customs/vies/faq.html?locale=lt#item_11
+     * @link https://ec.europa.eu/taxation_customs/vies/faq.html?locale=lt#item_11
      */
     private $patterns = [
         'AT' => 'U[A-Z\d]{8}',
-        'BE' => '(0\d{9}|\d{10})',
+        'BE' => '(0|1)\d{9}',
         'BG' => '\d{9,10}',
         'CY' => '\d{8}[A-Z]',
         'CZ' => '\d{8,10}',
@@ -23,12 +23,13 @@ class Validator
         'EE' => '\d{9}',
         'EL' => '\d{9}',
         'ES' => '([A-Z]\d{7}[A-Z]|\d{8}[A-Z]|[A-Z]\d{8})',
+        'EU' => '\d{9}',
         'FI' => '\d{8}',
         'FR' => '[A-Z\d]{2}\d{9}',
         'GB' => '(\d{9}|\d{12}|(GD|HA)\d{3})',
         'HR' => '\d{11}',
         'HU' => '\d{8}',
-        'IE' => '([A-Z\d]{8}|[A-Z\d]{9})',
+        'IE' => '((\d{7}[A-Z]{1,2})|(\d[A-Z]\d{5}[A-Z]))',
         'IT' => '\d{11}',
         'LT' => '(\d{9}|\d{12})',
         'LU' => '\d{8}',
@@ -40,7 +41,8 @@ class Validator
         'RO' => '\d{2,10}',
         'SE' => '\d{12}',
         'SI' => '\d{8}',
-        'SK' => '\d{10}'
+        'SK' => '\d{10}',
+        'SM' => '\d{5}',
     ];
 
     /**
@@ -64,7 +66,7 @@ class Validator
      * @param string $countryCode
      * @return bool
      */
-    public function validateCountryCode(string $countryCode) : bool
+    public function validateCountryCode(string $countryCode): bool
     {
         $countries = new Countries();
         return isset($countries[$countryCode]);
@@ -76,7 +78,7 @@ class Validator
      * @param string $ipAddress
      * @return bool
      */
-    public function validateIpAddress(string $ipAddress) : bool
+    public function validateIpAddress(string $ipAddress): bool
     {
         if ($ipAddress === '') {
             return false;
@@ -92,7 +94,7 @@ class Validator
      *
      * @return boolean
      */
-    public function validateVatNumberFormat(string $vatNumber) : bool
+    public function validateVatNumberFormat(string $vatNumber): bool
     {
         if ($vatNumber === '') {
             return false;
@@ -117,7 +119,7 @@ class Validator
      *
      * @throws Vies\ViesException
      */
-    protected function validateVatNumberExistence(string $vatNumber) : bool
+    protected function validateVatNumberExistence(string $vatNumber): bool
     {
         $vatNumber = strtoupper($vatNumber);
         $country = substr($vatNumber, 0, 2);
@@ -134,7 +136,7 @@ class Validator
      *
      * @throws Vies\ViesException
      */
-    public function validateVatNumber(string $vatNumber) : bool
+    public function validateVatNumber(string $vatNumber): bool
     {
         return $this->validateVatNumberFormat($vatNumber) && $this->validateVatNumberExistence($vatNumber);
     }
