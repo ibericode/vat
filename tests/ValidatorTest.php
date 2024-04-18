@@ -3,6 +3,7 @@
 namespace Ibericode\Vat\Tests;
 
 use Ibericode\Vat\Validator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -12,9 +13,9 @@ use PHPUnit\Framework\TestCase;
 class ValidatorTest extends TestCase
 {
     /**
-     * @covers Validator::validateVatNumberFormat
+     * @coversXXX Validator::validateVatNumberFormat
      */
-    public function testValidateVatNumberFormat()
+    public function testValidateVatNumberFormat(): void
     {
         $valid = [
             'ATU12345678',
@@ -118,16 +119,14 @@ class ValidatorTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider validIpAddresses
-     */
-    public function testValidateIpAddressWithValid($value)
+    #[DataProvider('validIpAddresses')]
+    public function testValidateIpAddressWithValid($value): void
     {
         $validator = new Validator();
         $this->assertTrue($validator->validateIpAddress($value));
     }
 
-    public function validIpAddresses()
+    public static function validIpAddresses(): array
     {
         return [
             ['8.8.8.8'],
@@ -135,16 +134,14 @@ class ValidatorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidIpAddresses
-     */
-    public function testValidateIpAddressWithInvalidValues($value)
+    #[DataProvider('invalidIpAddresses')]
+    public function testValidateIpAddressWithInvalidValues($value): void
     {
         $validator = new Validator();
         $this->assertFalse($validator->validateIpAddress($value));
     }
 
-    public function invalidIpAddresses()
+    public static function invalidIpAddresses(): array
     {
         return [
             ['0.8.8.8.8'],
@@ -153,18 +150,14 @@ class ValidatorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider validCountryCodes
-     */
-    public function testValidateCountryCodeWithValidValues($value)
+    #[DataProvider('validCountryCodes')]
+    public function testValidateCountryCodeWithValidValues($value): void
     {
         $validator = new Validator();
         $this->assertTrue($validator->validateCountryCode($value));
     }
 
-    /**
-     * @dataProvider invalidCountryCodes
-     */
+    #[DataProvider('invalidCountryCodes')]
     public function testValidateCountryCodeWithInvalidValues($value)
     {
         $validator = new Validator();
@@ -172,7 +165,7 @@ class ValidatorTest extends TestCase
     }
 
 
-    public function validCountryCodes()
+    public static function validCountryCodes(): array
     {
         return [
            ['NL'],
@@ -182,7 +175,7 @@ class ValidatorTest extends TestCase
         ];
     }
 
-    public function invalidCountryCodes()
+    public static function invalidCountryCodes(): array
     {
         return [
             ['FOO'],

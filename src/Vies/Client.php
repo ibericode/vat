@@ -55,7 +55,7 @@ class Client
      *
      * @throws ViesException
      */
-    public function getInfo(string $countryCode, string $vatNumber) : object
+    public function getInfo(string $countryCode, string $vatNumber): object
     {
         try {
             $response = $this->getClient()->checkVat(
@@ -64,7 +64,6 @@ class Client
                     'vatNumber' => $vatNumber
                 )
             );
-
         } catch (SoapFault $e) {
             throw new ViesException($e->getMessage(), $e->getCode());
         }
