@@ -87,16 +87,18 @@ class RatesTest extends TestCase
         $rates = new Rates($mock, null);
 
         // Return correct VAT rates
-        self::assertEquals(  $rates->country('NL'), 21 );
-        self::assertEquals(  $rates->country('NL', 'reduced'), 6 );
+        self::assertEquals(  $rates->country('NL'), 22.0 );
+        self::assertEquals(  $rates->country('NL', 'reduced'), 7.0 );
 
-        // Return correct VAT rates on an older period
-        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2010-01-01')), 19);
-        self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2010-01-01')), 5);
+        // Return correct VAT rates for an older period
+        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2015-01-01')), 21.0);
+        self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2015-01-01')), 6.0);
 
-        // Return correct VAT rates on an future period
-        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2022-01-01')), 22);
-        self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2022-01-01')), 7);
+        // Return correct VAT rates for an even older period
+        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2010-01-01')), 19.0);
+        self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2010-01-01')), 5.0);
+
+
 
         // Exception when supplying country code for which we have no rate
         self::expectException( 'Exception' );
@@ -201,16 +203,18 @@ class RatesTest extends TestCase
         self::assertEquals($rates->all(), $data);
 
         // Return correct VAT rates
-        self::assertEquals($rates->country('NL'), 21);
-        self::assertEquals($rates->country('NL', 'reduced'), 6);
+        self::assertEquals($rates->country('NL'), 22.0);
+        self::assertEquals($rates->country('NL', 'reduced'), 7.0);
 
-        // Return correct VAT rates on an older period
-        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2010-01-01')), 19);
-        self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2010-01-01')), 5);
+        // Return correct VAT rates for an older period
+        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2015-01-01')), 21.0);
+        self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2015-01-01')), 6.0);
 
-        // Return correct VAT rates on an future period
-        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2022-01-01')), 22);
-        self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2022-01-01')), 7);
+        // Return correct VAT rates for an even older period
+        self::assertEquals($rates->country('NL', 'standard', new \DateTimeImmutable('2010-01-01')), 19.0);
+        self::assertEquals($rates->country('NL', 'reduced', new \DateTimeImmutable('2010-01-01')), 5.0);
+
+
     }
 
     /**
