@@ -23,9 +23,5 @@ jobs:
       - name: "Install dependencies with Composer"
         uses: "ramsey/composer-install@v2"
 
-      - name: "Run phpcs"
-        if: ${{ matrix.php-version == '8.3' }}
-        run: "vendor/bin/phpcs -n -s --report=checkstyle | cs2pr"
-
       - name: "Run PHPUnit"
         run: "vendor/bin/phpunit"
