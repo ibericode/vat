@@ -71,7 +71,7 @@ class Rates
             throw new Exception("Unserializable file content");
         }
 
-        $data = unserialize($contents, [
+        $data = @unserialize($contents, [
             'allowed_classes' => [
                 Period::class,
                 DateTimeImmutable::class
