@@ -71,7 +71,7 @@ class Rates
             throw new Exception("Unserializable file content");
         }
 
-        $data = unserialize($contents, [
+        $data = @unserialize($contents, [
             'allowed_classes' => [
                 Period::class,
                 DateTimeImmutable::class
@@ -153,7 +153,6 @@ class Rates
      */
     public function getRateForCountryOnDate(string $countryCode, \DateTimeInterface $datetime, string $level = self::RATE_STANDARD): float
     {
-        $activePeriod = $this->resolvePeriod($countryCode, $datetime);
-        return $activePeriod->getRate($level);
+        return $this->resolvePeriod($countryCode, $datetime)->getRate($level);
     }
 }

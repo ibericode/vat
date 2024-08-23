@@ -44,6 +44,19 @@ class Client
      */
     public function checkVat(string $countryCode, string $vatNumber): bool
     {
+        return (bool)$this->getInfo($countryCode, $vatNumber)->valid;
+    }
+
+    /**
+     * @param string $countryCode
+     * @param string $vatNumber
+     *
+     * @return object
+     *
+     * @throws ViesException
+     */
+    public function getInfo(string $countryCode, string $vatNumber): object
+    {
         try {
             $response = $this->getClient()->checkVat(
                 array(
@@ -55,7 +68,7 @@ class Client
             throw new ViesException($e->getMessage(), $e->getCode());
         }
 
-        return (bool) $response->valid;
+        return $response;
     }
 
     /**
