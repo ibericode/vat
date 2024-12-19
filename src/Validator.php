@@ -55,7 +55,7 @@ class Validator
      *
      * @param Vies\Client $client        (optional)
      */
-    public function __construct(Vies\Client $client = null)
+    public function __construct(?Vies\Client $client = null)
     {
         $this->client = $client ?: new Vies\Client();
     }

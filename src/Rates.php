@@ -38,7 +38,7 @@ class Rates
      * @param int $refreshInterval How often to check for new VAT rates. Defaults to every 12 hours.
      * @param Client|null $client The VAT client to use.
      */
-    public function __construct(string $storagePath, int $refreshInterval = 12 * 3600, Client $client = null)
+    public function __construct(string $storagePath, int $refreshInterval = 12 * 3600, ?Client $client = null)
     {
         $this->refreshInterval = $refreshInterval;
         $this->storagePath = $storagePath;
