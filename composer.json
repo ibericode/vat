@@ -35,5 +35,8 @@
   "suggest": {
     "ibericode/vat-bundle": "Symfony bundle for integrating this package",
     "ext-soap": "Needed to support VIES VAT number validation"
+  },
+  "scripts": {
+    "check-syntax": "find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l"
   }
 }
