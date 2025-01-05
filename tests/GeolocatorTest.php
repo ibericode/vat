@@ -3,22 +3,23 @@
 namespace Ibericode\Vat\Tests;
 
 use Ibericode\Vat\Geolocator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class GeolocatorTest extends TestCase
 {
     /**
-     * @dataProvider provider
      * @group remote-http
      */
-    public function testClient($service)
+    #[DataProvider('servicesProvider')]
+    public function testService($service): void
     {
         $geolocator = new Geolocator($service);
         $country = $geolocator->locateIpAddress('8.8.8.8');
         $this->assertEquals('US', $country);
     }
 
-    public function provider()
+    public static function servicesProvider(): \Generator
     {
         yield ['ip2c.org'];
     }

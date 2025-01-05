@@ -19,7 +19,7 @@ class RatesTest extends TestCase
         }
     }
 
-    private function getRatesClientMock()
+    private function getRatesClientMock(): \PHPUnit\Framework\MockObject\MockObject
     {
         $client = $this->getMockBuilder(IbericodeVatRatesClient::class)
             ->getMock();

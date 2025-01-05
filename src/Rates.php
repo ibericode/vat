@@ -38,7 +38,7 @@ class Rates
      * @param int $refreshInterval How often to check for new VAT rates. Defaults to every 12 hours.
      * @param Client|null $client The VAT client to use.
      */
-    public function __construct(string $storagePath, int $refreshInterval = 12 * 3600, Client $client = null)
+    public function __construct(string $storagePath, int $refreshInterval = 12 * 3600, ?Client $client = null)
     {
         $this->refreshInterval = $refreshInterval;
         $this->storagePath = $storagePath;
@@ -71,7 +71,7 @@ class Rates
             throw new Exception("Unserializable file content");
         }
 
-        $data = unserialize($contents, [
+        $data = @unserialize($contents, [
             'allowed_classes' => [
                 Period::class,
                 DateTimeImmutable::class
@@ -153,7 +153,6 @@ class Rates
      */
     public function getRateForCountryOnDate(string $countryCode, \DateTimeInterface $datetime, string $level = self::RATE_STANDARD): float
     {
-        $activePeriod = $this->resolvePeriod($countryCode, $datetime);
-        return $activePeriod->getRate($level);
+        return $this->resolvePeriod($countryCode, $datetime)->getRate($level);
     }
 }
