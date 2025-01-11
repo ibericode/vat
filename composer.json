@@ -37,6 +37,6 @@
     "ext-soap": "Needed to support VIES VAT number validation"
   },
   "scripts": {
-    "check-syntax": "find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l"
+    "check-syntax": "find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php --define error_reporting=-1 -l"
   }
 }
