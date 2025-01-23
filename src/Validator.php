@@ -29,7 +29,7 @@ class Validator
         'GB' => '(\d{9}|\d{12}|(GD|HA)\d{3})',
         'HR' => '\d{11}',
         'HU' => '\d{8}',
-        'IE' => '([A-Z\d]{8}|[A-Z\d]{9})',
+        'IE' => '((\d{7}[A-Z]{1,2})|(\d[A-Z]\d{5}[A-Z]))',
         'IT' => '\d{11}',
         'LT' => '(\d{9}|\d{12})',
         'LU' => '\d{8}',
@@ -43,7 +43,6 @@ class Validator
         'SI' => '\d{8}',
         'SK' => '\d{10}',
         'SM' => '\d{5}',
-        'XI' => '(\d{9}|\d{12}|(GD|HA)\d{3})',
     ];
 
     /**
@@ -56,7 +55,7 @@ class Validator
      *
      * @param Vies\Client $client        (optional)
      */
-    public function __construct(Vies\Client $client = null)
+    public function __construct(?Vies\Client $client = null)
     {
         $this->client = $client ?: new Vies\Client();
     }

@@ -9,14 +9,14 @@ use PHPUnit\Framework\TestCase;
 
 class CountriesTest extends TestCase
 {
-    public function testIterator()
+    public function testIterator(): void
     {
         $countries = new Countries();
 
-        $this->assertCount(250, $countries);
+        $this->assertCount(249, $countries);
     }
 
-    public function testArrayAccess()
+    public function testArrayAccess(): void
     {
         $countries = new Countries();
 
@@ -27,35 +27,35 @@ class CountriesTest extends TestCase
         $countries['FOO'];
     }
 
-    public function testArrayAccessWithInvalidCountryCode()
+    public function testArrayAccessWithInvalidCountryCode(): void
     {
         $countries = new Countries();
         $this->expectException(Exception::class);
         $countries['FOO'];
     }
 
-    public function testArrayAccessSetValue()
+    public function testArrayAccessSetValue(): void
     {
         $countries = new Countries();
         $this->expectException(Exception::class);
         $countries['FOO'] = 'bar';
     }
 
-    public function testArrayAccessUnsetValue()
+    public function testArrayAccessUnsetValue(): void
     {
         $countries = new Countries();
         $this->expectException(Exception::class);
         unset($countries['FOO']);
     }
 
-    public function testHasCode()
+    public function testHasCode(): void
     {
         $countries = new Countries();
         $this->assertFalse($countries->hasCountryCode('FOO'));
         $this->assertTrue($countries->hasCountryCode('NL'));
     }
 
-    public function testIsCodeInEU()
+    public function testIsCodeInEU(): void
     {
         $countries = new Countries();
         $this->assertFalse($countries->isCountryCodeInEU('FOO'));
