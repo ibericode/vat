@@ -41,7 +41,7 @@ class IbericodeVatRatesClient implements Client
         $return = [];
         foreach ($result->items as $country => $periods) {
             foreach ($periods as $i => $period) {
-                $periods[$i] = new Period(new \DateTimeImmutable($period->effective_from), (array) $period->rates);
+                $periods[$i] = new Period(new \DateTimeImmutable($period->effective_from), (array) $period->rates, $period->exceptions ?? []);
             }
 
             $return[$country] = $periods;
