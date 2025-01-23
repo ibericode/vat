@@ -38,7 +38,7 @@ class Rates
      * @param int $refreshInterval How often to check for new VAT rates. Defaults to every 12 hours.
      * @param Client|null $client The VAT client to use.
      */
-    public function __construct(string $storagePath, int $refreshInterval = 12 * 3600, Client $client = null)
+    public function __construct(string $storagePath, int $refreshInterval = 12 * 3600, ?Client $client = null)
     {
         $this->refreshInterval = $refreshInterval;
         $this->storagePath = $storagePath;
@@ -67,8 +67,11 @@ class Rates
     private function loadFromFile(): void
     {
         $contents = file_get_contents($this->storagePath);
+        if ($contents === false || $contents === '') {
+            throw new Exception("Unserializable file content");
+        }
 
-        $data = unserialize($contents, [
+        $data = @unserialize($contents, [
             'allowed_classes' => [
                 Period::class,
                 DateTimeImmutable::class
@@ -136,7 +139,7 @@ class Rates
      * @return float
      * @throws \Exception
      */
-    public function getRateForCountry(string $countryCode, string $level = self::RATE_STANDARD, ?string $postcode = null) : float
+    public function getRateForCountry(string $countryCode, string $level = self::RATE_STANDARD, ?string $postcode = null): float
     {
         $todayMidnight = new \DateTimeImmutable('today midnight');
         return $this->getRateForCountryOnDate($countryCode, $todayMidnight, $level, $postcode);
@@ -152,7 +155,6 @@ class Rates
      */
     public function getRateForCountryOnDate(string $countryCode, \DateTimeInterface $datetime, string $level = self::RATE_STANDARD, ?string $postcode = null) : float
     {
-        $activePeriod = $this->resolvePeriod($countryCode, $datetime);
-        return $activePeriod->getRate($level, $postcode);
+        return $this->resolvePeriod($countryCode, $datetime)->getRate($level, $postcode);
     }
 }

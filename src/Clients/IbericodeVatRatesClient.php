@@ -19,10 +19,10 @@ class IbericodeVatRatesClient implements Client
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 6);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
         $body = (string) curl_exec($ch);
         $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
@@ -36,13 +36,12 @@ class IbericodeVatRatesClient implements Client
 
     private function parseResponse(string $response_body): array
     {
-        $result = json_decode($response_body, true);
-
+        $result = json_decode($response_body, false);
 
         $return = [];
-        foreach ($result['items'] as $country => $periods) {
+        foreach ($result->items as $country => $periods) {
             foreach ($periods as $i => $period) {
-                $periods[$i] = new Period(new \DateTimeImmutable($period['effective_from']), (array) $period['rates'],  $period['exceptions'] ?? []);
+                $periods[$i] = new Period(new \DateTimeImmutable($period->effective_from), (array) $period->rates, $period->exceptions ?? []);
             }
 
             $return[$country] = $periods;

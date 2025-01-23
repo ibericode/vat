@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Ibericode\Vat;
 
-use DateTime;
-
 /**
  * Class Countries
  *
@@ -262,9 +260,7 @@ class Countries implements \Iterator, \ArrayAccess
         'VI' => 'U.S. Virgin Islands',
         'VN' => 'Vietnam',
         'VU' => 'Vanuatu',
-        'WF' => 'Wallis And Futuna',
-        'EH' => 'Western Sahara',
-        'XI' => 'Northern Ireland',
+        'WF' => 'Wallis & Futuna',
         'WS' => 'Samoa',
         'YE' => 'Yemen',
         'YT' => 'Mayotte',
@@ -287,7 +283,41 @@ class Countries implements \Iterator, \ArrayAccess
      */
     public function getCountryCodesInEU(): array
     {
-        return ['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GR', 'HU', 'HR', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK', 'XI'];
+        return [
+            'AT', // Austria
+            'AX', // Aland islands => Finland
+            'BE', // Belgium
+            'BG', // Bulgaria
+            'CY', // Cyprus
+            'CZ', // Czechia
+            'DE', // Germany
+            'DK', // Denmark
+            'EE', // Estonia
+            'ES', // Spain
+            'FI', // Finland
+            'FR', // France
+            'GF', // French guiana => France
+            'GP', // Guadeloupe => France
+            'GR', // Greece
+            'HU', // Hungary
+            'HR', // Croatia
+            'IE', // Ireland
+            'IT', // Italy
+            'LT', // Lithuania
+            'LU', // Luxembourg
+            'LV', // Latvia
+            'MT', // Malta
+            'MQ', // Martinique => France
+            'NL', // Netherlands
+            'PL', // Poland
+            'PT', // Portugal
+            'RE', // Reunion => France
+            'RO', // Romania
+            'SE', // Sweden
+            'SI', // Slovenia
+            'SK', // Slovakia
+            'YT', // Mayotte => France
+        ];
     }
 
     /**
@@ -306,8 +336,7 @@ class Countries implements \Iterator, \ArrayAccess
      * @return mixed Can return any type.
      * @since 5.0.0
      */
-    #[\ReturnTypeWillChange]
-    public function current()
+    public function current(): mixed
     {
         return current($this->data);
     }
@@ -318,8 +347,7 @@ class Countries implements \Iterator, \ArrayAccess
      * @return void Any returned value is ignored.
      * @since 5.0.0
      */
-    #[\ReturnTypeWillChange]
-    public function next()
+    public function next(): void
     {
         next($this->data);
     }
@@ -330,8 +358,7 @@ class Countries implements \Iterator, \ArrayAccess
      * @return mixed scalar on success, or null on failure.
      * @since 5.0.0
      */
-    #[\ReturnTypeWillChange]
-    public function key()
+    public function key(): mixed
     {
         return key($this->data);
     }
@@ -343,8 +370,7 @@ class Countries implements \Iterator, \ArrayAccess
      * Returns true on success or false on failure.
      * @since 5.0.0
      */
-    #[\ReturnTypeWillChange]
-    public function valid()
+    public function valid(): bool
     {
         return key($this->data) !== null;
     }
@@ -355,8 +381,7 @@ class Countries implements \Iterator, \ArrayAccess
      * @return void Any returned value is ignored.
      * @since 5.0.0
      */
-    #[\ReturnTypeWillChange]
-    public function rewind()
+    public function rewind(): void
     {
         reset($this->data);
     }
@@ -365,8 +390,7 @@ class Countries implements \Iterator, \ArrayAccess
      * @param string $countryCode
      * @return bool
      */
-    #[\ReturnTypeWillChange]
-    public function offsetExists($countryCode)
+    public function offsetExists($countryCode): bool
     {
         return isset($this->data[$countryCode]);
     }
@@ -376,8 +400,7 @@ class Countries implements \Iterator, \ArrayAccess
      * @return string
      * @throws \Exception
      */
-    #[\ReturnTypeWillChange]
-    public function offsetGet($countryCode)
+    public function offsetGet($countryCode): mixed
     {
         if (!$this->offsetExists($countryCode)) {
             throw new Exception("Invalid country code {$countryCode}");
@@ -389,22 +412,18 @@ class Countries implements \Iterator, \ArrayAccess
     /**
      * @param string $countryCode
      * @param string $name
-     * @return string
      * @throws \Exception
      */
-    #[\ReturnTypeWillChange]
-    public function offsetSet($countryCode, $name)
+    public function offsetSet($countryCode, $name): void
     {
         throw new Exception('Invalid use of Countries class');
     }
 
     /**
      * @param string $countryCode
-     * @return string
      * @throws \Exception
      */
-    #[\ReturnTypeWillChange]
-    public function offsetUnset($countryCode)
+    public function offsetUnset($countryCode): void
     {
         throw new Exception('Invalid use of Countries class');
     }

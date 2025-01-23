@@ -7,6 +7,7 @@ use Ibericode\Vat\Clients\IbericodeVatRatesClient;
 use Ibericode\Vat\Exception;
 use Ibericode\Vat\Period;
 use Ibericode\Vat\Rates;
+use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\TestCase;
 
 class RatesTest extends TestCase
@@ -18,7 +19,7 @@ class RatesTest extends TestCase
         }
     }
 
-    private function getRatesClientMock()
+    private function getRatesClientMock(): \PHPUnit\Framework\MockObject\MockObject
     {
         $client = $this->getMockBuilder(IbericodeVatRatesClient::class)
             ->getMock();

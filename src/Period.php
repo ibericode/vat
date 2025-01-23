@@ -31,7 +31,7 @@ class Period
         return $this->effectiveFrom;
     }
 
-    public function getRate(string $level, ?string $postcode = null) : float
+    public function getRate(string $level, ?string $postcode = null): float
     {
         if (!isset($this->rates[$level])) {
             throw new InvalidArgumentException("Invalid rate level: {$level}");
@@ -42,16 +42,17 @@ class Period
 
     private function getExceptionRate(string $level, ?string $postcode): ?float
     {
-        if(!$postcode){
+        if (!$postcode) {
             return null;
         }
 
-        foreach ($this->exceptions as $exception){
-            if(preg_match('/^'.$exception['postcode'].'$/', $postcode)){
+        foreach ($this->exceptions as $exception) {
+            if (preg_match('/^'.$exception['postcode'].'$/', $postcode)) {
                 return $exception[$level] ?? $exception[Rates::RATE_STANDARD];
             }
         }
 
         return null;
     }
+
 }
