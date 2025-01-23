@@ -47,6 +47,7 @@ class Period
         }
 
         foreach ($this->exceptions as $exception) {
+            $exception = (array) $exception;
             if (preg_match('/^'.$exception['postcode'].'$/', $postcode)) {
                 return $exception[$level] ?? $exception[Rates::RATE_STANDARD];
             }
