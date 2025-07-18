@@ -54,6 +54,11 @@ class ValidatorTest extends TestCase
             'SE123456789012',
             'SI12345678',
             'SK1234567890',
+            'XI123456789',
+            'XI123 4567 89',
+            'XI123456789111',
+            'XI123 4567 89 111',
+            'XIHZ6AB',
         ];
 
         $validator = new Validator();
@@ -96,6 +101,7 @@ class ValidatorTest extends TestCase
             'SE12345678901',
             'SI1234567',
             'SK123456789',
+            'XI12345678',
 
             // valid number but with prefix
             'invalid_prefix_GB999999973',
@@ -104,6 +110,7 @@ class ValidatorTest extends TestCase
             'invalid_prefix_BE0123456789',
             'invalid_prefix_MT12345678',
             'invalid_prefix_LT123456789',
+            'invalid_prefix_XI123456789',
 
             // valid number but with suffix
             'IE1234567X_invalid_suffix',
@@ -111,6 +118,7 @@ class ValidatorTest extends TestCase
             'BE0123456789_invalid_suffix',
             'MT12345678_invalid_suffix',
             'LT123456789_invalid_suffix',
+            'XI123456789_invalid_suffix',
         ];
 
         foreach ($invalid as $format) {
