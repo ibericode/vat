@@ -21,16 +21,17 @@ class IP2Country implements GeolocatorInterface
             return '';
         }
 
-        $url = sprintf('https://api.ip2country.info/ip?%s', $ipAddress);
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 6);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
+        $url = 'https://api.ip2country.info/ip?' . $ipAddress;
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS => 3,
+            CURLOPT_SSL_VERIFYPEER => true,
+        ]);
         $response = (string) curl_exec($ch);
-        $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $code = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
         curl_close($ch);
 
         if ($code >= 400 || $response === '') {

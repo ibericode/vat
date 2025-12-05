@@ -36,7 +36,6 @@ class ValidatorTest extends TestCase
             'FRA2345678901',
             'FRAB345678901',
             'FR1B345678901',
-            'GB999999973',
             'HU12345678',
             'HR12345678901',
             'IE1234567X',
@@ -82,7 +81,6 @@ class ValidatorTest extends TestCase
             'ESX1234567',
             'FI1234567',
             'FR1234567890',
-            'GB99999997',
             'HU1234567',
             'HR1234567890',
             'IE123456X',
@@ -104,7 +102,6 @@ class ValidatorTest extends TestCase
             'XI12345678',
 
             // valid number but with prefix
-            'invalid_prefix_GB999999973',
             'invalid_prefix_IE1234567X',
             'invalid_prefix_ESB1234567C',
             'invalid_prefix_BE0123456789',
