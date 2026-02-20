@@ -26,7 +26,6 @@ class IbericodeVatRatesClient implements Client
         ]);
         $body = (string) curl_exec($ch);
         $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-        curl_close($ch);
 
         if ($body === '' || $status >= 400) {
             throw new ClientException("Error fetching rates from {$url}.");
