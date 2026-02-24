@@ -32,7 +32,6 @@ class IP2Country implements GeolocatorInterface
         ]);
         $response = (string) curl_exec($ch);
         $code = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-        curl_close($ch);
 
         if ($code >= 400 || $response === '') {
             return '';
