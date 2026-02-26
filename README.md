@@ -1,13 +1,7 @@
 ibericode/vat
 ================
 
-[![Build Status](https://github.com/ibericode/vat/actions/workflows/build.yml/badge.svg)](https://github.com/ibericode/vat/actions/workflows/build.yml)
-[![Latest Stable Version](https://img.shields.io/packagist/v/ibericode/vat.svg)](https://packagist.org/packages/ibericode/vat)
-![PHP from Packagist](https://img.shields.io/packagist/php-v/ibericode/vat.svg)
-[![Total Downloads](https://img.shields.io/packagist/dt/dannyvankooten/vat.php.svg)](https://packagist.org/packages/ibericode/vat)
-![License](https://img.shields.io/github/license/ibericode/vat.svg)
-
-This is a simple PHP library to help you deal with Europe's VAT rules.
+A simple PHP library to help you deal with Europe's VAT rules.
 
 - Fetch VAT rates for any EU member state using [ibericode/vat-rates](https://github.com/ibericode/vat-rates).
 - Validate VAT numbers (by format and/or [existence](http://ec.europa.eu/taxation_customs/vies/))
