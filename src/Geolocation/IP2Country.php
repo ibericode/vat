@@ -38,6 +38,10 @@ class IP2Country implements GeolocatorInterface
         }
 
         $data = json_decode($response);
+        if (!is_object($data) || !isset($data->countryCode) || !is_string($data->countryCode)) {
+            return '';
+        }
+
         return $data->countryCode;
     }
 }
