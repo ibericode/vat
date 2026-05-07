@@ -38,9 +38,20 @@ class IbericodeVatRatesClient implements Client
     {
         $result = json_decode($response_body, false);
 
+        if (!is_object($result) || !isset($result->items) || !is_object($result->items)) {
+            throw new ClientException('Malformed response from VAT rates service.');
+        }
+
         $return = [];
         foreach ($result->items as $country => $periods) {
+            if (!is_array($periods)) {
+                throw new ClientException("Malformed periods for country {$country}.");
+            }
+
             foreach ($periods as $i => $period) {
+                if (!is_object($period) || !isset($period->effective_from, $period->rates)) {
+                    throw new ClientException("Malformed period entry for country {$country}.");
+                }
                 $periods[$i] = new Period(new \DateTimeImmutable($period->effective_from), (array) $period->rates);
             }
 
