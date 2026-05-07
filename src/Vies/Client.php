@@ -87,6 +87,14 @@ class Client
     protected function getClient(): SoapClient
     {
         if ($this->client === null) {
+            if (!class_exists(SoapClient::class)) {
+                throw new ViesException(
+                    'The PHP SOAP extension (ext-soap) is required for VIES VAT number validation '
+                    . 'but is not loaded. Install or enable ext-soap, e.g. via your distribution\'s '
+                    . 'php-soap package.'
+                );
+            }
+
             $this->client = new SoapClient(self::URL, [
                 'connection_timeout' => $this->timeout,
                 'cache_wsdl' => WSDL_CACHE_DISK,
