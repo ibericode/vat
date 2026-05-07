@@ -44,7 +44,13 @@ class Client
      */
     public function checkVat(string $countryCode, string $vatNumber): bool
     {
-        return (bool)$this->getInfo($countryCode, $vatNumber)->valid;
+        $info = $this->getInfo($countryCode, $vatNumber);
+
+        if (!isset($info->valid)) {
+            throw new ViesException('VIES response is missing the "valid" field.');
+        }
+
+        return (bool) $info->valid;
     }
 
     /**
