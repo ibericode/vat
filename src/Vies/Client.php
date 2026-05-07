@@ -87,7 +87,17 @@ class Client
     protected function getClient(): SoapClient
     {
         if ($this->client === null) {
-            $this->client = new SoapClient(self::URL, ['connection_timeout' => $this->timeout]);
+            $this->client = new SoapClient(self::URL, [
+                'connection_timeout' => $this->timeout,
+                'cache_wsdl' => WSDL_CACHE_DISK,
+                'keep_alive' => false,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP,
+                'stream_context' => stream_context_create([
+                    'http' => [
+                        'timeout' => $this->timeout,
+                    ],
+                ]),
+            ]);
         }
 
         return $this->client;
