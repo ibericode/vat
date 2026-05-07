@@ -68,21 +68,52 @@ class Rates
     {
         $contents = file_get_contents($this->storagePath);
         if ($contents === false || $contents === '') {
-            throw new Exception("Unserializable file content");
+            throw new Exception("Empty rates cache file");
         }
 
-        $data = @unserialize($contents, [
-            'allowed_classes' => [
-                Period::class,
-                DateTimeImmutable::class
-            ]
-        ]);
-
-        if (false === is_array($data)) {
-            throw new Exception("Unserializable file content");
+        $data = json_decode($contents, true);
+        if (!is_array($data)) {
+            throw new Exception("Malformed rates cache file");
         }
 
-        $this->rates = $data;
+        $rates = [];
+        foreach ($data as $country => $periods) {
+            if (!is_array($periods)) {
+                throw new Exception("Malformed rates cache file");
+            }
+
+            foreach ($periods as $period) {
+                if (!is_array($period) || !isset($period['effective_from'], $period['rates']) || !is_array($period['rates'])) {
+                    throw new Exception("Malformed rates cache file");
+                }
+
+                $rates[$country][] = new Period(
+                    new DateTimeImmutable($period['effective_from']),
+                    $period['rates']
+                );
+            }
+        }
+
+        $this->rates = $rates;
+    }
+
+    /**
+     * @return array<string, array<int, array{effective_from: string, rates: array<string, float>}>>
+     */
+    private function ratesToArray(): array
+    {
+        $out = [];
+        foreach ($this->rates as $country => $periods) {
+            foreach ($periods as $period) {
+                /** @var Period $period */
+                $out[$country][] = [
+                    'effective_from' => $period->getEffectiveFrom()->format(\DateTimeInterface::ATOM),
+                    'rates' => $period->getRates(),
+                ];
+            }
+        }
+
+        return $out;
     }
 
     private function loadFromRemote(): void
@@ -109,7 +140,8 @@ class Rates
 
         // update local file with updated rates
         if ($this->storagePath !== '') {
-            $this->writeStorageAtomic(serialize($this->rates));
+            $payload = json_encode($this->ratesToArray(), JSON_THROW_ON_ERROR);
+            $this->writeStorageAtomic($payload);
         }
     }
 
