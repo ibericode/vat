@@ -71,7 +71,11 @@ class Client
                 )
             );
         } catch (SoapFault $e) {
-            throw new ViesException($e->getMessage(), $e->getCode());
+            if (ViesServiceUnavailableException::isTransientFault($e->getMessage())) {
+                throw new ViesServiceUnavailableException($e->getMessage(), (int) $e->getCode(), $e);
+            }
+
+            throw new ViesException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         return $response;
