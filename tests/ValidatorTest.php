@@ -153,7 +153,11 @@ class ValidatorTest extends TestCase
         return [
             ['0.8.8.8.8'],
             ['foo.bar'],
-            ['192.168.1.10'], // local range
+            ['192.168.1.10'],     // private range
+            ['127.0.0.1'],        // loopback (reserved)
+            ['169.254.1.1'],      // link-local (reserved)
+            ['::1'],              // IPv6 loopback (reserved)
+            ['fe80::1'],          // IPv6 link-local (reserved)
         ];
     }
 
