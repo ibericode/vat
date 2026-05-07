@@ -104,6 +104,23 @@ class RatesTest extends TestCase
         $this->assertEquals(21.0, $rates->getRateForCountry('NL'));
     }
 
+    public function testPeriodsAreSortedDescendingAndStable(): void
+    {
+        $client = $this->getMockBuilder(IbericodeVatRatesClient::class)->getMock();
+        $client->method('fetch')->willReturn([
+            'NL' => [
+                new Period(new \DateTimeImmutable('2010-01-01'), ['standard' => 19.0]),
+                new Period(new \DateTimeImmutable('2020-01-01'), ['standard' => 21.0]),
+                new Period(new \DateTimeImmutable('2015-01-01'), ['standard' => 21.0]),
+            ],
+        ]);
+
+        $rates = new Rates('vendor/rates', 30, $client);
+        $this->assertEquals(21.0, $rates->getRateForCountryOnDate('NL', new \DateTime('2021-01-01')));
+        $this->assertEquals(21.0, $rates->getRateForCountryOnDate('NL', new \DateTime('2016-01-01')));
+        $this->assertEquals(19.0, $rates->getRateForCountryOnDate('NL', new \DateTime('2011-01-01')));
+    }
+
     public function testCacheWriteIsAtomic()
     {
         $path = 'vendor/rates';

@@ -101,9 +101,9 @@ class Rates
         }
 
         // sort periods by DateTime so that later periods come first
-        foreach ($this->rates as $country => $periods) {
+        foreach (array_keys($this->rates) as $country) {
             usort($this->rates[$country], function (Period $period1, Period $period2) {
-                return $period1->getEffectiveFrom() > $period2->getEffectiveFrom() ? -1 : 1;
+                return $period2->getEffectiveFrom() <=> $period1->getEffectiveFrom();
             });
         }
 
