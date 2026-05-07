@@ -109,7 +109,19 @@ class Rates
 
         // update local file with updated rates
         if ($this->storagePath !== '') {
-            file_put_contents($this->storagePath, serialize($this->rates));
+            $this->writeStorageAtomic(serialize($this->rates));
+        }
+    }
+
+    private function writeStorageAtomic(string $contents): void
+    {
+        $tmp = $this->storagePath . '.' . bin2hex(random_bytes(6)) . '.tmp';
+        if (file_put_contents($tmp, $contents) === false) {
+            return;
+        }
+
+        if (!@rename($tmp, $this->storagePath)) {
+            @unlink($tmp);
         }
     }
 

@@ -103,4 +103,17 @@ class RatesTest extends TestCase
         $rates = new Rates('vendor/rates', -1, $client);
         $this->assertEquals(21.0, $rates->getRateForCountry('NL'));
     }
+
+    public function testCacheWriteIsAtomic()
+    {
+        $path = 'vendor/rates';
+        $client = $this->getRatesClientMock();
+        $rates = new Rates($path, 30, $client);
+        $rates->getRateForCountry('NL');
+
+        $this->assertFileExists($path);
+
+        $leftover = glob($path . '.*.tmp') ?: [];
+        $this->assertSame([], $leftover, 'No .tmp files should remain after a successful write.');
+    }
 }
