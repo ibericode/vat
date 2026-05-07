@@ -38,6 +38,10 @@ class IP2C implements GeolocatorInterface
         }
 
         $parts = explode(';', $response);
-        return $parts[1] === 'ZZ' ? '' : $parts[1];
+        if (count($parts) < 2 || $parts[1] === 'ZZ') {
+            return '';
+        }
+
+        return $parts[1];
     }
 }
