@@ -13,7 +13,15 @@ class CountriesTest extends TestCase
     {
         $countries = new Countries();
 
-        $this->assertCount(249, $countries);
+        $this->assertCount(250, $countries);
+    }
+
+    public function testNorthernIrelandIsRecognized(): void
+    {
+        $countries = new Countries();
+        $this->assertTrue($countries->hasCountryCode('XI'));
+        $this->assertTrue($countries->isCountryCodeInEU('XI'));
+        $this->assertNotEmpty($countries['XI']);
     }
 
     public function testArrayAccess(): void
