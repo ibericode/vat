@@ -83,7 +83,11 @@ class Validator
             return false;
         }
 
-        return (bool) filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE);
+        return (bool) filter_var(
+            $ipAddress,
+            FILTER_VALIDATE_IP,
+            FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+        );
     }
 
     /**
@@ -102,6 +106,11 @@ class Validator
         $vatNumber = strtoupper($vatNumber);
         $country = substr($vatNumber, 0, 2);
         $number = substr($vatNumber, 2);
+
+        // Greece's ISO country code is GR but VIES uses EL for VAT.
+        if ($country === 'GR') {
+            $country = 'EL';
+        }
 
         if (! isset($this->patterns[$country])) {
             return false;
@@ -123,6 +132,11 @@ class Validator
         $vatNumber = strtoupper($vatNumber);
         $country = substr($vatNumber, 0, 2);
         $number = substr($vatNumber, 2);
+
+        if ($country === 'GR') {
+            $country = 'EL';
+        }
+
         return $this->client->checkVat($country, $number);
     }
 

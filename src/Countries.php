@@ -262,6 +262,7 @@ class Countries implements \Iterator, \ArrayAccess
         'VU' => 'Vanuatu',
         'WF' => 'Wallis & Futuna',
         'WS' => 'Samoa',
+        'XI' => 'Northern Ireland',
         'YE' => 'Yemen',
         'YT' => 'Mayotte',
         'ZA' => 'South Africa',
@@ -316,6 +317,7 @@ class Countries implements \Iterator, \ArrayAccess
             'SE', // Sweden
             'SI', // Slovenia
             'SK', // Slovakia
+            'XI', // Northern Ireland (treated as EU for VAT on goods under the Windsor Framework)
             'YT', // Mayotte => France
         ];
     }

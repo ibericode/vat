@@ -30,6 +30,7 @@ class ValidatorTest extends TestCase
             'DK12345678',
             'EE123456789',
             'EL123456789',
+            'GR123456789',
             'ESX12345678',
             'FI12345678',
             'FR12345678901',
@@ -78,6 +79,7 @@ class ValidatorTest extends TestCase
             'DK1234567',
             'EE12345678',
             'EL12345678',
+            'GR12345678',
             'ESX1234567',
             'FI1234567',
             'FR1234567890',
@@ -151,7 +153,11 @@ class ValidatorTest extends TestCase
         return [
             ['0.8.8.8.8'],
             ['foo.bar'],
-            ['192.168.1.10'], // local range
+            ['192.168.1.10'],     // private range
+            ['127.0.0.1'],        // loopback (reserved)
+            ['169.254.1.1'],      // link-local (reserved)
+            ['::1'],              // IPv6 loopback (reserved)
+            ['fe80::1'],          // IPv6 link-local (reserved)
         ];
     }
 

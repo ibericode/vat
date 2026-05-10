@@ -37,4 +37,13 @@ class Period
 
         return $this->rates[$level];
     }
+
+    /**
+     * @internal Used to serialize Period to a non-PHP cache format.
+     * @return array<string, float>
+     */
+    public function getRates(): array
+    {
+        return $this->rates;
+    }
 }

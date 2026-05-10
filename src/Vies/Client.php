@@ -44,7 +44,13 @@ class Client
      */
     public function checkVat(string $countryCode, string $vatNumber): bool
     {
-        return (bool)$this->getInfo($countryCode, $vatNumber)->valid;
+        $info = $this->getInfo($countryCode, $vatNumber);
+
+        if (!isset($info->valid)) {
+            throw new ViesException('VIES response is missing the "valid" field.');
+        }
+
+        return (bool) $info->valid;
     }
 
     /**
@@ -65,7 +71,11 @@ class Client
                 )
             );
         } catch (SoapFault $e) {
-            throw new ViesException($e->getMessage(), $e->getCode());
+            if (ViesServiceUnavailableException::isTransientFault($e->getMessage())) {
+                throw new ViesServiceUnavailableException($e->getMessage(), (int) $e->getCode(), $e);
+            }
+
+            throw new ViesException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         return $response;
@@ -77,7 +87,25 @@ class Client
     protected function getClient(): SoapClient
     {
         if ($this->client === null) {
-            $this->client = new SoapClient(self::URL, ['connection_timeout' => $this->timeout]);
+            if (!class_exists(SoapClient::class)) {
+                throw new ViesException(
+                    'The PHP SOAP extension (ext-soap) is required for VIES VAT number validation '
+                    . 'but is not loaded. Install or enable ext-soap, e.g. via your distribution\'s '
+                    . 'php-soap package.'
+                );
+            }
+
+            $this->client = new SoapClient(self::URL, [
+                'connection_timeout' => $this->timeout,
+                'cache_wsdl' => WSDL_CACHE_DISK,
+                'keep_alive' => false,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP,
+                'stream_context' => stream_context_create([
+                    'http' => [
+                        'timeout' => $this->timeout,
+                    ],
+                ]),
+            ]);
         }
 
         return $this->client;
