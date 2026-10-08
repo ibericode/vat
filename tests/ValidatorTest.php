@@ -3,6 +3,7 @@
 namespace Ibericode\Vat\Tests;
 
 use Ibericode\Vat\Validator;
+use Ibericode\Vat\Vies\Client;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -30,7 +31,6 @@ class ValidatorTest extends TestCase
             'DK12345678',
             'EE123456789',
             'EL123456789',
-            'GR123456789',
             'ESX12345678',
             'FI12345678',
             'FR12345678901',
@@ -79,7 +79,6 @@ class ValidatorTest extends TestCase
             'DK1234567',
             'EE12345678',
             'EL12345678',
-            'GR12345678',
             'ESX1234567',
             'FI1234567',
             'FR1234567890',
@@ -103,6 +102,10 @@ class ValidatorTest extends TestCase
             'SK123456789',
             'XI12345678',
 
+            // Greece uses EL for VAT, not its ISO code GR
+            'GR123456789',
+            'GR094259216',
+
             // valid number but with prefix
             'invalid_prefix_IE1234567X',
             'invalid_prefix_ESB1234567C',
@@ -124,6 +127,15 @@ class ValidatorTest extends TestCase
             $isValid = $validator->validateVatNumberFormat($format);
             $this->assertFalse($isValid, "{$format} passed validation, but shouldn't.");
         }
+    }
+
+    public function testValidateVatNumberRejectsGreekIsoPrefixWithoutCallingVies(): void
+    {
+        $client = $this->createMock(Client::class);
+        $client->expects($this->never())->method('checkVat');
+
+        $validator = new Validator($client);
+        $this->assertFalse($validator->validateVatNumber('GR094259216'));
     }
 
     #[DataProvider('validIpAddresses')]
