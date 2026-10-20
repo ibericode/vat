@@ -51,9 +51,8 @@ class Rates
             return;
         }
 
-        if ($this->storagePath !== '' && \is_file($this->storagePath)) {
-            $this->loadFromFile();
-
+        // an unreadable cache file (eg from an older version of this library) is treated as missing
+        if ($this->storagePath !== '' && \is_file($this->storagePath) && $this->loadFromFile()) {
             // bail early if file is still valid
             // TODO: Store timestamp in file, so we're safe from fs modifications
             if (filemtime($this->storagePath) > (time() - $this->refreshInterval)) {
@@ -64,37 +63,44 @@ class Rates
         $this->loadFromRemote();
     }
 
-    private function loadFromFile(): void
+    /**
+     * @return bool Whether the rates were successfully loaded from the cache file
+     */
+    private function loadFromFile(): bool
     {
-        $contents = file_get_contents($this->storagePath);
+        $contents = @file_get_contents($this->storagePath);
         if ($contents === false || $contents === '') {
-            throw new Exception("Empty rates cache file");
+            return false;
         }
 
         $data = json_decode($contents, true);
         if (!is_array($data)) {
-            throw new Exception("Malformed rates cache file");
+            return false;
         }
 
         $rates = [];
         foreach ($data as $country => $periods) {
             if (!is_array($periods)) {
-                throw new Exception("Malformed rates cache file");
+                return false;
             }
 
             foreach ($periods as $period) {
-                if (!is_array($period) || !isset($period['effective_from'], $period['rates']) || !is_array($period['rates'])) {
-                    throw new Exception("Malformed rates cache file");
+                if (!is_array($period) || !isset($period['effective_from'], $period['rates']) || !is_string($period['effective_from']) || !is_array($period['rates'])) {
+                    return false;
                 }
 
-                $rates[$country][] = new Period(
-                    new DateTimeImmutable($period['effective_from']),
-                    $period['rates']
-                );
+                try {
+                    $effectiveFrom = new DateTimeImmutable($period['effective_from']);
+                } catch (\Exception $e) {
+                    return false;
+                }
+
+                $rates[$country][] = new Period($effectiveFrom, $period['rates']);
             }
         }
 
         $this->rates = $rates;
+        return true;
     }
 
     /**

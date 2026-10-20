@@ -7,6 +7,7 @@ use Ibericode\Vat\Clients\IbericodeVatRatesClient;
 use Ibericode\Vat\Exception;
 use Ibericode\Vat\Period;
 use Ibericode\Vat\Rates;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\TestCase;
 
@@ -82,12 +83,42 @@ class RatesTest extends TestCase
         $rates = new Rates('vendor/rates', 30, $client);
         $client->expects($this->never())->method('fetch');
         $this->assertEquals(21.0, $rates->getRateForCountry('NL'));
+    }
 
-        // test by invalidating file and testing for exception
-        file_put_contents('vendor/rates', 'foobar');
-        $rates = new Rates('vendor/rates', 30, $client);
-        $this->expectException(Exception::class);
+    public static function unreadableCacheProvider(): array
+    {
+        return [
+            'garbage' => ['foobar'],
+            'empty' => [''],
+            'old serialized format' => [serialize(['NL' => [new Period(new \DateTimeImmutable('2019/01/01'), ['standard' => 21.00])]])],
+            'invalid structure' => [json_encode(['NL' => 'foo'])],
+            'invalid date' => [json_encode(['NL' => [['effective_from' => 'not a date', 'rates' => ['standard' => 21.0]]]])],
+        ];
+    }
+
+    #[DataProvider('unreadableCacheProvider')]
+    public function testUnreadableCacheFileIsTreatedAsMissing(string $contents): void
+    {
+        file_put_contents('vendor/rates', $contents);
+
+        // a fresh (non-expired) but unreadable cache file should trigger a re-fetch
+        $client = $this->getRatesClientMock();
+        $rates = new Rates('vendor/rates', 3600, $client);
         $this->assertEquals(21.0, $rates->getRateForCountry('NL'));
+
+        // and the cache file should be rewritten in the current format
+        $this->assertIsArray(json_decode(file_get_contents('vendor/rates'), true));
+    }
+
+    public function testUnreadableCacheFileAndClientExceptionThrows(): void
+    {
+        file_put_contents('vendor/rates', 'foobar');
+
+        $client = $this->getMockBuilder(IbericodeVatRatesClient::class)->getMock();
+        $client->method('fetch')->willThrowException(new ClientException('Service is down'));
+        $rates = new Rates('vendor/rates', 3600, $client);
+        $this->expectException(ClientException::class);
+        $rates->getRateForCountry('NL');
     }
 
     public function testRatesAreLoadedFromFileOnClientException()
